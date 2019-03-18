@@ -10,7 +10,7 @@ public class Group implements java.io.Serializable {
 
 	private java.lang.Integer id;
 	private java.lang.String name;
-	private java.util.List<com.redhat.management.approval.Approver> approvers;
+	private java.util.ArrayList<com.redhat.management.approval.Approver> approvers;
 
 	public Group() {
 	}
@@ -31,17 +31,17 @@ public class Group implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public java.util.List<com.redhat.management.approval.Approver> getApprovers() {
+	public java.util.ArrayList<com.redhat.management.approval.Approver> getApprovers() {
 		return this.approvers;
 	}
 
 	public void setApprovers(
-			java.util.List<com.redhat.management.approval.Approver> approvers) {
+			java.util.ArrayList<com.redhat.management.approval.Approver> approvers) {
 		this.approvers = approvers;
 	}
 
 	public Group(java.lang.Integer id, java.lang.String name,
-			java.util.List<com.redhat.management.approval.Approver> approvers) {
+			java.util.ArrayList<com.redhat.management.approval.Approver> approvers) {
 		this.id = id;
 		this.name = name;
 		this.approvers = approvers;

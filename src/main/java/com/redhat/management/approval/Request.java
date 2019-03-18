@@ -12,7 +12,7 @@ public class Request implements java.io.Serializable {
 	private java.lang.String content;
 	private Approver requester;
 
-	private java.util.List<com.redhat.management.approval.Approver> approvers;
+	private java.util.List<com.redhat.management.approval.Group> groups;
 
 	public Request() {
 	}
@@ -41,22 +41,22 @@ public class Request implements java.io.Serializable {
 		this.requester = requester;
 	}
 
-	public java.util.List<com.redhat.management.approval.Approver> getApprovers() {
-		return this.approvers;
+	public java.util.List<com.redhat.management.approval.Group> getGroups() {
+		return this.groups;
 	}
 
-	public void setApprovers(
-			java.util.List<com.redhat.management.approval.Approver> approvers) {
-		this.approvers = approvers;
+	public void setGroups(
+			java.util.List<com.redhat.management.approval.Group> groups) {
+		this.groups = groups;
 	}
 
 	public Request(java.lang.Integer id, java.lang.String content,
 			com.redhat.management.approval.Approver requester,
-			java.util.List<com.redhat.management.approval.Approver> approvers) {
+			java.util.List<com.redhat.management.approval.Group> groups) {
 		this.id = id;
 		this.content = content;
 		this.requester = requester;
-		this.approvers = approvers;
+		this.groups = groups;
 	}
 
 }
