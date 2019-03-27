@@ -71,11 +71,12 @@ public class ApproveEmailBody implements java.io.Serializable {
 	public String getParamsTable(HashMap<String, String> params) {
 		StringBuilder paramsTable = new StringBuilder(
 				"<tbody><tr><td><strong>Key</strong></td><td><strong>Value<strong></td></tr>\n");
-		params.forEach((k, v) -> {
-			String entry = "<tr><td>" + k + "</td><td>" + v + "</td></tr>\n";
-			paramsTable.append(entry);
+		
+		for(HashMap.Entry<String, String> entry: params.entrySet()) {
+			String param = "<tr><td>" + entry.getKey() + "</td><td>" + entry.getValue() + "</td></tr>\n";
+			paramsTable.append(param);
 
-		});
+		};
 		paramsTable.append("</tbody>");
 		return paramsTable.toString();
 	}

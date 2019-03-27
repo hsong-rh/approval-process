@@ -42,7 +42,7 @@ public class EmailDispatcher implements java.io.Serializable {
 	}
 
 	public String getUrl() {
-		return "https://access.redhat.com/r/insights-services/v1/sendEmails";
+		return "url";
 	}
 
 	public String getHeaders() {
@@ -51,7 +51,7 @@ public class EmailDispatcher implements java.io.Serializable {
 		 * 
 		 * key1=val1;key2=v2;key3=v3
 		 */
-		return "x-rh-clientid=approval-api;x-rh-apitoken=mcNoq2cpF+JGm+bO7wjNj6PyyR5HQJh/eZYJal9Ai7WDo3fQBXi9l8L+9+WF7RnqoYyhhvEwFJQ2dyXGRT9RQeNAQ46Bj/ic6bNmijO+KJ1vVtu;x-rh-insights-env=qa";
+		return "header";
 	}
 
 	public String getContent(ArrayList<com.redhat.management.approval.Approver> approvers,
