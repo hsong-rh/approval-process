@@ -8,19 +8,14 @@ public class Group implements java.io.Serializable {
 
 	static final long serialVersionUID = 1L;
 
-	private java.lang.Integer id;
 	private java.lang.String name;
 	private java.util.ArrayList<com.redhat.management.approval.Approver> approvers;
 
+	private java.lang.String description;
+
+	private java.lang.String uuid;
+
 	public Group() {
-	}
-
-	public java.lang.Integer getId() {
-		return this.id;
-	}
-
-	public void setId(java.lang.Integer id) {
-		this.id = id;
 	}
 
 	public java.lang.String getName() {
@@ -40,11 +35,39 @@ public class Group implements java.io.Serializable {
 		this.approvers = approvers;
 	}
 
-	public Group(java.lang.Integer id, java.lang.String name,
-			java.util.ArrayList<com.redhat.management.approval.Approver> approvers) {
-		this.id = id;
+	public java.lang.String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(java.lang.String description) {
+		this.description = description;
+	}
+
+	public String toString() {
+		String groupStr = "\nGroup: " + "\n name: " + this.name
+				+ "\n description: " + this.description + "\n uuid: " + this.uuid;
+
+		for (Approver approver : approvers) {
+			groupStr = groupStr + approver;
+		}
+		return groupStr;
+	}
+
+	public java.lang.String getUuid() {
+		return this.uuid;
+	}
+
+	public void setUuid(java.lang.String uuid) {
+		this.uuid = uuid;
+	}
+
+	public Group(java.lang.String name,
+			java.util.ArrayList<com.redhat.management.approval.Approver> approvers,
+			java.lang.String description, java.lang.String uuid) {
 		this.name = name;
 		this.approvers = approvers;
+		this.description = description;
+		this.uuid = uuid;
 	}
 
 }

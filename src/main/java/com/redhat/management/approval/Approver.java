@@ -57,14 +57,22 @@ public class Approver implements java.io.Serializable {
 		this.emailAddress = emailAddress;
 	}
 
-	public Approver(java.lang.Integer id, java.lang.String firstName,
-			java.lang.String lastName, java.lang.String userName,
-			java.lang.String emailAddress) {
-		this.id = id;
+	public Approver(java.lang.String userName, java.lang.String emailAddress, 
+	        java.lang.String firstName, java.lang.String lastName) {
+		this.id = 100;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userName = userName;
 		this.emailAddress = emailAddress;
+	}
+	
+	public String toString() {
+	    return "\nApprover: " +
+	    "\n id: " + this.id +
+	    "\n firstName: " + this.firstName +
+	    "\n lastName: " + this.lastName +
+	    "\n userName: " + this.userName +
+	    "\n emailAddress: " + this.emailAddress;
 	}
 
 }
