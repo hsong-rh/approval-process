@@ -1,6 +1,5 @@
-
-
-
+<html>
+<head>
 <style>
   table {
     border-collapse: collapse;
@@ -11,8 +10,8 @@
     text-align: left;
   }
 </style>
-
-
+</head>
+<body>
 <p>To ${approver_name},</p>
 <p>The following Order requires your approval:</p>
 <p><strong>Orderer:&nbsp;</strong>${requester_name} mailto: ${orderer_email}</p>
@@ -23,25 +22,15 @@
 <p><strong>Order Date:&nbsp;</strong>${order_date}</p>
 <p><strong>Order Time:&nbsp;</strong>${order_time}</p>
 <p><br></p>
-<p><strong>To VIEW this Order Click</strong>&nbsp;(requires authentication):-</p>
-<p>${order_link}</p>
+<p><strong>To VIEW this Order <a href="${order_link}">Click</a></strong>&nbsp;(requires authentication):-</p>
 <p><br></p>
-<p><strong>To APPROVE this Order Click</strong> :-</p>
-<p>${approve_link}</p>
-<p><br></p>
-<p><strong>To DENY this Order Click</strong> :-</p>
-<p>${deny_link}</p>
+<p><strong>To APPROVE this Order <a href="${approve_link}">Click</a></strong> :-</p>
 <p><br></p>
 <p><strong>Order Parameters:</strong></p>
-
 ${params}
-<table></table>
 <p><br></p>
 <p><strong>Approval ID&nbsp;</strong>: ${approval_id}</p>
-<p>Stage : ${current_stage} of ${total_stages}</p>
 <p>------------------------------------------------------------------------------------------------------</p>
 <p><br></p>
-
-
-  
-
+</body>
+</html>
