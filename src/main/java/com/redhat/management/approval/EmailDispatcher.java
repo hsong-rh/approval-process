@@ -42,7 +42,8 @@ public class EmailDispatcher implements java.io.Serializable {
 	}
 
 	public String getUrl() {
-		return "url";
+		url = System.getenv("BACKOFFICE_URL");
+		return url;
 	}
 
 	public String getHeaders() {
@@ -51,18 +52,26 @@ public class EmailDispatcher implements java.io.Serializable {
 		 * 
 		 * key1=val1;key2=v2;key3=v3
 		 */
-		return "header";
+		String clientId = System.getenv("BACKOFFICE_CLIENT_ID");
+		String token = System.getenv("BACKOFFICE_TOKEN");
+		String clientEnv = System.getenv("BACKOFFICE_CLIENT_ENV");
+		
+		StringBuilder headers = new StringBuilder();
+		headers.append("x-rh-clientid=");
+		headers.append(clientId);
+		headers.append(";x-rh-apitoken=");
+		headers.append(token);
+		headers.append(";x-rh-insights-env=");
+		headers.append(clientEnv);
+		
+		return headers.toString();
 	}
 
 	public String getContent(ArrayList<com.redhat.management.approval.Approver> approvers,
 	        com.redhat.management.approval.Group group, 
 	        ArrayList<com.redhat.management.approval.Stage> stages,
 			com.redhat.management.approval.Request request) {
-		/*
-		 { "emails": [ { "subject": "Here's an Email!", "body":
-		 "<body><p>This is the email.</p></body>", "bodyType": "html",
-		 "recipients": [ "\"Bill\" bilwei@redhat.com" ] } ] }
-		 */
+
         ArrayList<ApproveEmail> emails = new ArrayList<ApproveEmail>();
 		for (Approver approver : approvers) {
             String name = approver.getFirstName() + " " + approver.getLastName();
@@ -107,8 +116,7 @@ public class EmailDispatcher implements java.io.Serializable {
     }
 
     public static String getStageUrl(Stage stage) {
-        // TODO: get hostname from ENV
-        String hostname = "http://localhost:3000/api/v0.1";
-        return hostname + "/stages/"+ stage.getId()+"/actions";
+        String apiUrl = System.getenv("APPROVAL_API_URL");
+        return apiUrl + "/"+ stage.getId()+"/actions";
     }
 }

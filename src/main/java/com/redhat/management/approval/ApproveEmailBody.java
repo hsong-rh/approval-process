@@ -1,11 +1,9 @@
 package com.redhat.management.approval;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.Path;
 import java.util.HashMap;
+import java.net.URL;
+import java.net.URLConnection;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 /**
@@ -18,21 +16,19 @@ public class ApproveEmailBody implements java.io.Serializable {
 
 	private com.redhat.management.approval.Request request;
 	private com.redhat.management.approval.Approver approver;
-	private String templateFile = "EmailContent.html";
+	private String templateFile = "EmailTemplate.html";
 
 	private com.redhat.management.approval.Group group;
 
 	private java.util.ArrayList<com.redhat.management.approval.Stage> stages;
 
 	public java.lang.String getEmailTemplate() {
-		java.lang.String template = System
-				.getProperty("jboss.server.config.dir") + "/" + templateFile;
-		System.out.println("template path: " + template);
+	    URL url = ApproveEmailBody.class.getResource(templateFile);
 
-		java.lang.String content = "";
+ 		java.lang.String content = "";
 		try {
-			content = new String(Files.readAllBytes(Paths.get(template)));
-		} catch (IOException e) {
+			content = getUrlContent(url);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return content;
@@ -45,6 +41,24 @@ public class ApproveEmailBody implements java.io.Serializable {
 		StrSubstitutor sub = new StrSubstitutor(values);
 		return sub.replace(template);
 	}
+	
+	public static String getUrlContent(URL url) throws Exception {
+        URLConnection connection = url.openConnection();
+        BufferedReader in = new BufferedReader(
+                                new InputStreamReader(
+                                    connection.getInputStream()));
+
+        StringBuilder content = new StringBuilder();
+        String inputLine;
+
+        while ((inputLine = in.readLine()) != null) 
+            content.append(inputLine);
+
+        in.close();
+
+        return content.toString();
+	    
+	}
 
 	public HashMap<String, String> getRequestParameters() {
 	    Stage currentStage = EmailDispatcher.getCurrentStage(group, stages);
@@ -56,6 +70,16 @@ public class ApproveEmailBody implements java.io.Serializable {
 		values.put("product_name", (String) request_content.get("product"));
 		values.put("portfolio_name", (String) request_content.get("portfolio"));
 		values.put("order_id", (String) request_content.get("order_id"));
+		try {
+			String date = InputParser.getCreated("dd MMM yyyy", request.getCreatedTime());
+			String time = InputParser.getCreated("HH:mm:ss", request.getCreatedTime());
+			values.put("order_date", date);
+			values.put("order_time", time);
+
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		HashMap<String, String> params = (HashMap<String, String>) request_content
 				.get("params");
@@ -64,6 +88,7 @@ public class ApproveEmailBody implements java.io.Serializable {
 		values.put("params", getParamsTable(params));
 		values.put("current_stage", String.valueOf(stages.indexOf(currentStage)+1));
 		values.put("total_stages", String.valueOf(stages.size()));
+		
 
 		return values;
 	}

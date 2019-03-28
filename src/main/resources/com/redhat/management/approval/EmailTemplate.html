@@ -1,0 +1,47 @@
+
+
+
+<style>
+  table {
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: left;
+  }
+</style>
+
+
+<p>To ${approver_name},</p>
+<p>The following Order requires your approval:</p>
+<p><strong>Orderer:&nbsp;</strong>${requester_name} mailto: ${orderer_email}</p>
+<p><strong>Product:&nbsp;</strong>${product_name}</p>
+<p><strong>Portfolio:</strong>&nbsp;${portfolio_name}</p>
+<p><strong>Platform:</strong>&nbsp;${platform_name}</p>
+<p><strong>Order ID:</strong>&nbsp;${order_id}</p>
+<p><strong>Order Date:&nbsp;</strong>${order_date}</p>
+<p><strong>Order Time:&nbsp;</strong>${order_time}</p>
+<p><br></p>
+<p><strong>To VIEW this Order Click</strong>&nbsp;(requires authentication):-</p>
+<p>${order_link}</p>
+<p><br></p>
+<p><strong>To APPROVE this Order Click</strong> :-</p>
+<p>${approve_link}</p>
+<p><br></p>
+<p><strong>To DENY this Order Click</strong> :-</p>
+<p>${deny_link}</p>
+<p><br></p>
+<p><strong>Order Parameters:</strong></p>
+
+${params}
+<table></table>
+<p><br></p>
+<p><strong>Approval ID&nbsp;</strong>: ${approval_id}</p>
+<p>Stage : ${current_stage} of ${total_stages}</p>
+<p>------------------------------------------------------------------------------------------------------</p>
+<p><br></p>
+
+
+  
+
