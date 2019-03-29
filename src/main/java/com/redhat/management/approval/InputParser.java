@@ -15,7 +15,7 @@ public class InputParser implements java.io.Serializable {
 
     static final long serialVersionUID = 1L;
     	
-    private final static String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss Z" ;
+    private final static String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     public static Request parseRequest(java.util.LinkedHashMap<String, Object> requestMaps) {
         return new Request(requestMaps);
@@ -52,7 +52,7 @@ public class InputParser implements java.io.Serializable {
         java.util.ArrayList<Stage> stages = new java.util.ArrayList<Stage>();
         for (java.util.LinkedHashMap<String, Object> rawStage : rawStages) {
 
-            Stage stage = new Stage((java.lang.Integer)rawStage.get("id"), (String)rawStage.get("uuid"), (String)rawStage.get("created_at"), (String)rawStage.get("group_ref"));
+            Stage stage = new Stage((java.lang.String)rawStage.get("id"), (String)rawStage.get("uuid"), (String)rawStage.get("created_at"), (String)rawStage.get("group_ref"));
             stages.add(stage);
         }
         

@@ -8,7 +8,7 @@ public class Stage implements java.io.Serializable {
 
 	static final long serialVersionUID = 1L;
 
-	private Integer id;
+	private java.lang.String id;
 	private java.lang.String uuid;
 	private java.lang.String createdTime;
 
@@ -33,11 +33,11 @@ public class Stage implements java.io.Serializable {
 		this.createdTime = createdTime;
 	}
 
-	public java.lang.Integer getId() {
+	public java.lang.String getId() {
 		return this.id;
 	}
 
-	public void setId(java.lang.Integer id) {
+	public void setId(java.lang.String id) {
 		this.id = id;
 	}
 
@@ -49,7 +49,7 @@ public class Stage implements java.io.Serializable {
 		this.groupId = groupId;
 	}
 
-	public Stage(java.lang.Integer id, java.lang.String uuid,
+	public Stage(java.lang.String id, java.lang.String uuid,
 			java.lang.String createdTime, java.lang.String groupId) {
 		this.id = id;
 		this.uuid = uuid;
@@ -58,7 +58,7 @@ public class Stage implements java.io.Serializable {
 	}
 	
 	public String toString() {
-	    return "\nStage: \n" +
+	    return "\nStage:" +
 	        "\n   id: " + id +
 	        "\n   uuid: " + uuid +
 	        "\n   group id: " + groupId +
