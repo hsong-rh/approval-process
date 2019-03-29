@@ -111,8 +111,11 @@ public class EmailDispatcher implements java.io.Serializable {
 	    return null; //TODO Exception handler
 	}
 	
-	public static String getStageContent(String signalContent) {
-	   return signalContent.equals("skip") ? "{ :operation => 'skip', :processed_by => 'sysadmin' }" : "{ :operation => 'notify', :processed_by => 'sysadmin' }";
+	public static String getStageContent(String decision) {
+	    if (decision == null )
+	        decision = "undecided";
+	        
+	    return decision.equals("denied") ? "{ :operation => 'skip', :processed_by => 'sysadmin' }" : "{ :operation => 'notify', :processed_by => 'sysadmin' }";
     }
 
     public static String getStageUrl(Stage stage) {
