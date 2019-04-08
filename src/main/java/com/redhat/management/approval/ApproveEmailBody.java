@@ -66,15 +66,17 @@ public class ApproveEmailBody implements java.io.Serializable {
 		HashMap<String, String> values = new HashMap<String, String>();
 		values.put("approver_name",
 				approver.getFirstName() + " " + approver.getLastName());
-		values.put("requester_name", (String) request.getRequester());
-	    values.put("orderer_email", request.getRequesterEmail());
+		values.put("requester_name", (String) request.getIdentityFullName());
+	    values.put("orderer_email", request.getIdentityEmail());
 		values.put("product_name", (String) request_content.get("product"));
 		values.put("portfolio_name", (String) request_content.get("portfolio"));
 		values.put("platform_name", (String) request_content.get("platform"));
 		values.put("order_id", (String) request_content.get("order_id"));
+		
+		values.put("order_link", request.getOriginalUrl());
 		// TODO: get valid links here
-		values.put("order_link", "http://access.insights.redhat.com/catalog/api/v0.1/order");
-		values.put("approve_link", "http://access.insights.redhat.com/approval/api/v0.1/stage");
+		String approve_link = "http://localhost:3000/api/v1.0/stageaction/" + currentStage.getRandomAccessKey() + "?approver=" + approver.getUserName();
+		values.put("approve_link", approve_link);
 		
 		try {
 			String date = InputParser.getCreated("dd MMM yyyy", request.getCreatedTime());
@@ -112,7 +114,7 @@ public class ApproveEmailBody implements java.io.Serializable {
 	
 	public Stage getCurrentStage() {
 	    for (Stage stage : stages) {
-	        if (stage.getGroupId().equals(group.getUuid()))
+	        if (stage.getGroupRef().equals(group.getUuid()))
 	            return stage;
 	    }
 	    return null; //TODO Exception handler
