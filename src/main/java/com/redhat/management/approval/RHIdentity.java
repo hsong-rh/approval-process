@@ -6,31 +6,31 @@ package com.redhat.management.approval;
 
 public class RHIdentity implements java.io.Serializable {
 
-	static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-	private com.redhat.management.approval.Identity identity;
+    private com.redhat.management.approval.Identity identity;
 
-	public RHIdentity() {
-	}
+    public RHIdentity() {
+    }
 
-	public com.redhat.management.approval.Identity getIdentity() {
-		return this.identity;
-	}
+    public com.redhat.management.approval.Identity getIdentity() {
+        return this.identity;
+    }
 
-	public void setIdentity(com.redhat.management.approval.Identity identity) {
-		this.identity = identity;
-	}
+    public void setIdentity(com.redhat.management.approval.Identity identity) {
+        this.identity = identity;
+    }
 
-	public RHIdentity(com.redhat.management.approval.Identity identity) {
-		this.identity = identity;
-	}
-	
-	public User getUser() {
-	    return getIdentity().getUser();
-	}
-	
-	public String toString() {
-	    return "RHIdentity: " + identity;
-	}
+    public RHIdentity(com.redhat.management.approval.Identity identity) {
+        this.identity = identity;
+    }
+    
+    public User getUser() {
+        return getIdentity().getUser();
+    }
+    
+    public String toString() {
+        return "RHIdentity: " + identity;
+    }
 
 }

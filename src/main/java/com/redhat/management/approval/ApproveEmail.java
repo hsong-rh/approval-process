@@ -6,59 +6,59 @@ package com.redhat.management.approval;
 
 public class ApproveEmail implements java.io.Serializable {
 
-	static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-	private java.lang.String subject;
-	private java.lang.String bodyType;
-	private java.lang.String body;
-	private java.util.ArrayList<java.lang.String> recipients;
+    private java.lang.String subject;
+    private java.lang.String bodyType;
+    private java.lang.String body;
+    private java.util.ArrayList<java.lang.String> recipients;
 
-	public java.lang.String getSubject() {
-		return this.subject;
-	}
+    public java.lang.String getSubject() {
+        return this.subject;
+    }
 
-	public void setSubject(java.lang.String subject) {
-		this.subject = subject;
-	}
+    public void setSubject(java.lang.String subject) {
+        this.subject = subject;
+    }
 
-	public java.lang.String getBodyType() {
-		return this.bodyType;
-	}
+    public java.lang.String getBodyType() {
+        return this.bodyType;
+    }
 
-	public void setBodyType(java.lang.String bodyType) {
-		this.bodyType = bodyType;
-	}
+    public void setBodyType(java.lang.String bodyType) {
+        this.bodyType = bodyType;
+    }
 
-	public java.lang.String getBody() {
-		return this.body;
-	}
+    public java.lang.String getBody() {
+        return this.body;
+    }
 
-	public void setBody(java.lang.String body) {
-		this.body = body;
-	}
-	
-	public void setBody(com.redhat.management.approval.Request request,
-	                    com.redhat.management.approval.Approver approver,
-	                    com.redhat.management.approval.Group group,
-	                    java.util.ArrayList<com.redhat.management.approval.Stage> stages) {
-		com.redhat.management.approval.ApproveEmailBody body = new com.redhat.management.approval.ApproveEmailBody(request, approver, group, stages);
-		this.body = body.getEmailBody();
-	}
+    public void setBody(java.lang.String body) {
+        this.body = body;
+    }
+    
+    public void setBody(com.redhat.management.approval.Request request,
+                        com.redhat.management.approval.Approver approver,
+                        com.redhat.management.approval.Group group,
+                        java.util.ArrayList<com.redhat.management.approval.Stage> stages) {
+        com.redhat.management.approval.ApproveEmailBody body = new com.redhat.management.approval.ApproveEmailBody(request, approver, group, stages);
+        this.body = body.getEmailBody();
+    }
 
 
-	public java.util.ArrayList<java.lang.String> getRecipients() {
-		return this.recipients;
-	}
+    public java.util.ArrayList<java.lang.String> getRecipients() {
+        return this.recipients;
+    }
 
-	public void setRecipents(java.util.ArrayList<java.lang.String> recipients) {
-		this.recipients = recipients;
-	}
+    public void setRecipents(java.util.ArrayList<java.lang.String> recipients) {
+        this.recipients = recipients;
+    }
 
-	public ApproveEmail(java.util.ArrayList<java.lang.String> recipients) {
-		this.subject = "Catalog : Approval Order ";
-		this.bodyType = "html";
-		this.body = "";
-		this.recipients = recipients;
-	}
+    public ApproveEmail(java.util.ArrayList<java.lang.String> recipients) {
+        this.subject = "Catalog : Approval Order ";
+        this.bodyType = "html";
+        this.body = "";
+        this.recipients = recipients;
+    }
 
 }

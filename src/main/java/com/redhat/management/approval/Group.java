@@ -6,68 +6,68 @@ package com.redhat.management.approval;
 
 public class Group implements java.io.Serializable {
 
-	static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-	private java.lang.String name;
-	private java.util.ArrayList<com.redhat.management.approval.Approver> approvers;
+    private java.lang.String name;
+    private java.util.ArrayList<com.redhat.management.approval.Approver> approvers;
 
-	private java.lang.String description;
+    private java.lang.String description;
 
-	private java.lang.String uuid;
+    private java.lang.String uuid;
 
-	public Group() {
-	}
+    public Group() {
+    }
 
-	public java.lang.String getName() {
-		return this.name;
-	}
+    public java.lang.String getName() {
+        return this.name;
+    }
 
-	public void setName(java.lang.String name) {
-		this.name = name;
-	}
+    public void setName(java.lang.String name) {
+        this.name = name;
+    }
 
-	public java.util.ArrayList<com.redhat.management.approval.Approver> getApprovers() {
-		return this.approvers;
-	}
+    public java.util.ArrayList<com.redhat.management.approval.Approver> getApprovers() {
+        return this.approvers;
+    }
 
-	public void setApprovers(
-			java.util.ArrayList<com.redhat.management.approval.Approver> approvers) {
-		this.approvers = approvers;
-	}
+    public void setApprovers(
+        java.util.ArrayList<com.redhat.management.approval.Approver> approvers) {
+        this.approvers = approvers;
+    }
 
-	public java.lang.String getDescription() {
-		return this.description;
-	}
+    public java.lang.String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(java.lang.String description) {
-		this.description = description;
-	}
+    public void setDescription(java.lang.String description) {
+        this.description = description;
+    }
 
-	public String toString() {
-		String groupStr = "\nGroup: " + "\n name: " + this.name
-				+ "\n description: " + this.description + "\n ref: " + this.uuid;
+    public String toString() {
+        String groupStr = "\nGroup: " + "\n name: " + this.name
+                + "\n description: " + this.description + "\n ref: " + this.uuid;
 
-		for (Approver approver : approvers) {
-			groupStr = groupStr + approver;
-		}
-		return groupStr;
-	}
+        for (Approver approver : approvers) {
+            groupStr = groupStr + approver;
+        }
+        return groupStr;
+    }
 
-	public java.lang.String getUuid() {
-		return this.uuid;
-	}
+    public java.lang.String getUuid() {
+        return this.uuid;
+    }
 
-	public void setUuid(java.lang.String uuid) {
-		this.uuid = uuid;
-	}
+    public void setUuid(java.lang.String uuid) {
+        this.uuid = uuid;
+    }
 
-	public Group(java.lang.String name,
-			java.util.ArrayList<com.redhat.management.approval.Approver> approvers,
-			java.lang.String description, java.lang.String uuid) {
-		this.name = name;
-		this.approvers = approvers;
-		this.description = description;
-		this.uuid = uuid;
-	}
+    public Group(java.lang.String name,
+            java.util.ArrayList<com.redhat.management.approval.Approver> approvers,
+            java.lang.String description, java.lang.String uuid) {
+        this.name = name;
+        this.approvers = approvers;
+        this.description = description;
+        this.uuid = uuid;
+    }
 
 }
