@@ -45,7 +45,7 @@ public class Group implements java.io.Serializable {
 
 	public String toString() {
 		String groupStr = "\nGroup: " + "\n name: " + this.name
-				+ "\n description: " + this.description + "\n uuid: " + this.uuid;
+				+ "\n description: " + this.description + "\n ref: " + this.uuid;
 
 		for (Approver approver : approvers) {
 			groupStr = groupStr + approver;

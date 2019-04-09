@@ -105,7 +105,7 @@ public class EmailDispatcher implements java.io.Serializable {
 	public static com.redhat.management.approval.Stage getCurrentStage(com.redhat.management.approval.Group group, 
 	    java.util.ArrayList<com.redhat.management.approval.Stage> stages) {
 	    for (Stage stage : stages) {
-	        if (stage.getGroupId().equals(group.getUuid()))
+	        if (stage.getGroupRef().equals(group.getUuid()))
 	            return stage;
 	    }
 	    return null; //TODO Exception handler
@@ -115,7 +115,10 @@ public class EmailDispatcher implements java.io.Serializable {
 	    if (decision == null )
 	        decision = "undecided";
 	        
-	    return decision.equals("denied") ? "{ :operation => 'skip', :processed_by => 'sysadmin' }" : "{ :operation => 'notify', :processed_by => 'sysadmin' }";
+	   String skip = "{\"operation\": \"skip\", \"processed_by\": \"system\"}";
+	   String notify = "{\"operation\": \"notify\", \"processed_by\": \"system\"}";
+	        
+	    return decision.equals("denied") ? skip : notify;
     }
 
     public static String getStageUrl(Stage stage) {

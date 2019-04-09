@@ -9,20 +9,20 @@ public class Stage implements java.io.Serializable {
 	static final long serialVersionUID = 1L;
 
 	private java.lang.String id;
-	private java.lang.String uuid;
+	private java.lang.String randomAccessKey;
 	private java.lang.String createdTime;
 
-	private String groupId;
+	private String groupRef;
 
 	public Stage() {
 	}
 
-	public java.lang.String getUuid() {
-		return this.uuid;
+	public java.lang.String getRandomAccessKey() {
+		return this.randomAccessKey;
 	}
 
-	public void setUuid(java.lang.String uuid) {
-		this.uuid = uuid;
+	public void setRandomAccessKey(java.lang.String randomAccessKey) {
+		this.randomAccessKey = randomAccessKey;
 	}
 
 	public java.lang.String getCreatedTime() {
@@ -41,27 +41,27 @@ public class Stage implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public java.lang.String getGroupId() {
-		return this.groupId;
+	public java.lang.String getGroupRef() {
+		return this.groupRef;
 	}
 
-	public void setGroupId(java.lang.String groupId) {
-		this.groupId = groupId;
+	public void setGroupRef(java.lang.String groupRef) {
+		this.groupRef = groupRef;
 	}
 
-	public Stage(java.lang.String id, java.lang.String uuid,
-			java.lang.String createdTime, java.lang.String groupId) {
+	public Stage(java.lang.String id, java.lang.String randomAccessKey,
+			java.lang.String createdTime, java.lang.String groupRef) {
 		this.id = id;
-		this.uuid = uuid;
+		this.randomAccessKey = randomAccessKey;
 		this.createdTime = createdTime;
-		this.groupId = groupId;
+		this.groupRef = groupRef;
 	}
 	
 	public String toString() {
 	    return "\nStage:" +
 	        "\n   id: " + id +
-	        "\n   uuid: " + uuid +
-	        "\n   group id: " + groupId +
+	        "\n   random access key: " + randomAccessKey +
+	        "\n   group ref: " + groupRef +
 	        "\n   createdTime: " + createdTime;
 	}
 
