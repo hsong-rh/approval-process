@@ -53,7 +53,7 @@ public class EmailDispatcher implements java.io.Serializable {
          * key1=val1;key2=v2;key3=v3
          */
         String clientId = System.getenv("BACKOFFICE_CLIENT_ID");
-        String token = System.getenv("BACKOFFICE_TOKEN");
+        String token = System.getenv("BACKOFFICE_TOKEN").replace("=", "");
         String clientEnv = System.getenv("BACKOFFICE_CLIENT_ENV");
         
         StringBuilder headers = new StringBuilder();
@@ -61,8 +61,10 @@ public class EmailDispatcher implements java.io.Serializable {
         headers.append(clientId);
         headers.append(";x-rh-apitoken=");
         headers.append(token);
-        headers.append(";x-rh-insights-env=");
-        headers.append(clientEnv);
+        if (clientEnv != null) {
+            headers.append(";x-rh-insights-env=");
+            headers.append(clientEnv);
+        }
         
         return headers.toString();
     }

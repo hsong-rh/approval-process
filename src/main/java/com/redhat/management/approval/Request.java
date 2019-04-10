@@ -190,7 +190,7 @@ public class Request implements java.io.Serializable {
             e.printStackTrace(); 
         }
 
-        return encoded;
+        return encoded.replace("=", "");
     }  
 
     public String createSysadminIdentity() {
@@ -200,7 +200,6 @@ public class Request implements java.io.Serializable {
         rhid.getUser().setEmail("sysadmin");
         rhid.getUser().setFirst_name("sysadmin");
         rhid.getUser().setLast_name("sysadmin");
-
         String id = "x-rh-identity=" + createEncodedIdentity(rhid);
         return id;
     }
