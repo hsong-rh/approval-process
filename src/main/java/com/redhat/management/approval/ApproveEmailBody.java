@@ -1,6 +1,10 @@
 package com.redhat.management.approval;
 
 import java.io.*;
+import java.util.Base64;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import java.util.HashMap;
 import java.net.URL;
 import java.net.URLConnection;
@@ -73,9 +77,20 @@ public class ApproveEmailBody implements java.io.Serializable {
         values.put("order_link", request.getOriginalUrl());
 
         String webUrl = System.getenv("APPROVAL_WEB_URL");
-        String approveLink = webUrl + currentStage.getRandomAccessKey() + "?approver=" + approver.getUserName();
-        values.put("approve_link", approveLink);
-        
+        try {
+            byte[] bytes = approver.getUserName().getBytes("UTF-8");
+            String encoded_user = Base64.getEncoder().encodeToString(bytes);
+            String approveLink = webUrl + currentStage.getRandomAccessKey() + "?approver=" + encoded_user;
+            values.put("approve_link", approveLink);
+        }
+        catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace(); 
+        }
+
         try {
             String date = InputParser.getCreated("dd MMM yyyy", request.getCreatedTime());
             String time = InputParser.getCreated("HH:mm:ss", request.getCreatedTime());
