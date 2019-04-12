@@ -6,63 +6,62 @@ package com.redhat.management.approval;
 
 public class Stage implements java.io.Serializable {
 
-	static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-	private java.lang.String id;
-	private java.lang.String uuid;
-	private java.lang.String createdTime;
+    private java.lang.String id;
+    private java.lang.String randomAccessKey;
+    private java.lang.String createdTime;
 
-	private String groupId;
+    private String groupRef;
 
-	public Stage() {
-	}
+    public Stage() {
+    }
 
-	public java.lang.String getUuid() {
-		return this.uuid;
-	}
+    public java.lang.String getRandomAccessKey() {
+        return this.randomAccessKey;
+    }
 
-	public void setUuid(java.lang.String uuid) {
-		this.uuid = uuid;
-	}
+    public void setRandomAccessKey(java.lang.String randomAccessKey) {
+        this.randomAccessKey = randomAccessKey;
+    }
 
-	public java.lang.String getCreatedTime() {
-		return this.createdTime;
-	}
+    public java.lang.String getCreatedTime() {
+        return this.createdTime;
+    }
 
-	public void setCreatedTime(java.lang.String createdTime) {
-		this.createdTime = createdTime;
-	}
+    public void setCreatedTime(java.lang.String createdTime) {
+        this.createdTime = createdTime;
+    }
 
-	public java.lang.String getId() {
-		return this.id;
-	}
+    public java.lang.String getId() {
+        return this.id;
+    }
 
-	public void setId(java.lang.String id) {
-		this.id = id;
-	}
+    public void setId(java.lang.String id) {
+        this.id = id;
+    }
 
-	public java.lang.String getGroupId() {
-		return this.groupId;
-	}
+    public java.lang.String getGroupRef() {
+        return this.groupRef;
+    }
 
-	public void setGroupId(java.lang.String groupId) {
-		this.groupId = groupId;
-	}
+    public void setGroupRef(java.lang.String groupRef) {
+        this.groupRef = groupRef;
+    }
 
-	public Stage(java.lang.String id, java.lang.String uuid,
-			java.lang.String createdTime, java.lang.String groupId) {
-		this.id = id;
-		this.uuid = uuid;
-		this.createdTime = createdTime;
-		this.groupId = groupId;
-	}
-	
-	public String toString() {
-	    return "\nStage:" +
-	        "\n   id: " + id +
-	        "\n   uuid: " + uuid +
-	        "\n   group id: " + groupId +
-	        "\n   createdTime: " + createdTime;
-	}
-
+    public Stage(java.lang.String id, java.lang.String randomAccessKey,
+            java.lang.String createdTime, java.lang.String groupRef) {
+        this.id = id;
+        this.randomAccessKey = randomAccessKey;
+        this.createdTime = createdTime;
+        this.groupRef = groupRef;
+    }
+    
+    public String toString() {
+        return "\nStage:" +
+          "\n   id: " + id +
+          "\n   random access key: " + randomAccessKey +
+          "\n   group ref: " + groupRef +
+          "\n   createdTime: " + createdTime;
+    }
 }

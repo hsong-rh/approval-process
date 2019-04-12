@@ -6,25 +6,25 @@ package com.redhat.management.approval;
 
 public class ApproveEmailList implements java.io.Serializable {
 
-	static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-	private java.util.ArrayList<com.redhat.management.approval.ApproveEmail> emails;
+    private java.util.ArrayList<com.redhat.management.approval.ApproveEmail> emails;
 
-	public ApproveEmailList() {
-	}
+    public ApproveEmailList() {
+    }
 
-	public java.util.ArrayList<com.redhat.management.approval.ApproveEmail> getEmails() {
-		return this.emails;
-	}
+    public java.util.ArrayList<com.redhat.management.approval.ApproveEmail> getEmails() {
+        return this.emails;
+    }
 
-	public void setEmails(
-			java.util.ArrayList<com.redhat.management.approval.ApproveEmail> emails) {
-		this.emails = emails;
-	}
+    public void setEmails(
+            java.util.ArrayList<com.redhat.management.approval.ApproveEmail> emails) {
+        this.emails = emails;
+    }
 
-	public ApproveEmailList(
-			java.util.ArrayList<com.redhat.management.approval.ApproveEmail> emails) {
-		this.emails = emails;
-	}
+    public ApproveEmailList(
+            java.util.ArrayList<com.redhat.management.approval.ApproveEmail> emails) {
+        this.emails = emails;
+    }
 
 }
