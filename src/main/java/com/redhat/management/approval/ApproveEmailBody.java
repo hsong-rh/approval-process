@@ -80,7 +80,7 @@ public class ApproveEmailBody implements java.io.Serializable {
         try {
             byte[] bytes = approver.getUserName().getBytes("UTF-8");
             String encoded_user = Base64.getEncoder().encodeToString(bytes);
-            String approveLink = webUrl + currentStage.getRandomAccessKey() + "?approver=" + encoded_user;
+            String approveLink = webUrl + "/api/approval/v1.0/" + currentStage.getRandomAccessKey() + "?approver=" + encoded_user;
             values.put("approve_link", approveLink);
         }
         catch (UnsupportedEncodingException e) {
