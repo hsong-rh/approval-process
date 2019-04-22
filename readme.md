@@ -1,4 +1,4 @@
 Repository Init Content
 =======================
 
-Your project description here.
+This is a project to provide PAM service for catalog approval service.
