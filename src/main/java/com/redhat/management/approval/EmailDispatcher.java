@@ -124,6 +124,6 @@ public class EmailDispatcher implements java.io.Serializable {
 
     public static String getStageUrl(Stage stage) {
         String apiUrl = System.getenv("APPROVAL_API_URL");
-        return apiUrl + "/api/approval/v1.0/"+ stage.getId()+"/actions";
+        return apiUrl + "/api/approval/v1.0/stages/"+ stage.getId()+"/actions";
     }
 }
