@@ -6,8 +6,9 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
-
+@JsonIgnoreProperties
 public class EmailDispatcher implements java.io.Serializable {
 
     static final long serialVersionUID = 1L;
