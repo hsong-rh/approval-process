@@ -6,9 +6,8 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.DeserializationFeature;
 
-@JsonIgnoreProperties
 public class EmailDispatcher implements java.io.Serializable {
 
     static final long serialVersionUID = 1L;
@@ -89,6 +88,7 @@ public class EmailDispatcher implements java.io.Serializable {
         ApproveEmailList list = new ApproveEmailList(emails);
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String jsonStr = "";
 
         try {
