@@ -72,7 +72,6 @@ public class ApproveEmailBody implements java.io.Serializable {
         values.put("orderer_email", request.getIdentityEmail());
         values.put("product_name", (String) request_content.get("product"));
         values.put("portfolio_name", (String) request_content.get("portfolio"));
-        values.put("platform_name", (String) request_content.get("platform"));
         values.put("order_id", (String) request_content.get("order_id"));
         values.put("order_link", request.getOriginalUrl());
 
