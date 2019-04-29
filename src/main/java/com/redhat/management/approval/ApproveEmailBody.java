@@ -73,7 +73,6 @@ public class ApproveEmailBody implements java.io.Serializable {
         values.put("product_name", (String) request_content.get("product"));
         values.put("portfolio_name", (String) request_content.get("portfolio"));
         values.put("order_id", (String) request_content.get("order_id"));
-        values.put("order_link", request.getOriginalUrl());
 
         String webUrl = System.getenv("APPROVAL_WEB_URL");
         try {
@@ -81,6 +80,9 @@ public class ApproveEmailBody implements java.io.Serializable {
             String encoded_user = Base64.getEncoder().encodeToString(bytes);
             String approveLink = webUrl + "/api/approval/v1.0/stageaction/" + currentStage.getRandomAccessKey() + "?approver=" + encoded_user;
             values.put("approve_link", approveLink);
+
+            String orderLink = webUrl + "/hybrid/catalog/approval/requests/detail/" + request.getId();
+            values.put("order_link", orderLink);
         }
         catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
