@@ -2,42 +2,43 @@ package com.redhat.management.approval;
 
 import java.util.ArrayList;
 import java.io.IOException;
+import java.io.Serializable;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 
-public class EmailDispatcher implements java.io.Serializable {
+public class EmailDispatcher implements Serializable {
 
     static final long serialVersionUID = 1L;
 
     @org.kie.api.definition.type.Label("Url")
-    private java.lang.String url;
+    private String url;
     @org.kie.api.definition.type.Label("Headers")
-    private java.lang.String headers;
+    private String headers;
     @org.kie.api.definition.type.Label("Body")
-    private java.lang.String body;
+    private String body;
 
     public EmailDispatcher() {
     }
 
-    public void setHeaders(java.lang.String headers) {
+    public EmailDispatcher(String headers, String url,
+            String body) {
         this.headers = headers;
-    }
-
-    public void setUrl(java.lang.String url) {
         this.url = url;
-    }
-
-    public void setBody(java.lang.String body) {
         this.body = body;
     }
 
-    public EmailDispatcher(java.lang.String headers, java.lang.String url,
-            java.lang.String body) {
+    public void setHeaders(String headers) {
         this.headers = headers;
+    }
+
+    public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setBody(String body) {
         this.body = body;
     }
 
@@ -69,11 +70,11 @@ public class EmailDispatcher implements java.io.Serializable {
         return headers.toString();
     }
 
-    public String getContent(ArrayList<com.redhat.management.approval.Approver> approvers,
-          com.redhat.management.approval.Group group, 
-          ArrayList<com.redhat.management.approval.Stage> stages,
-          com.redhat.management.approval.Request request) {
-
+    // Used in bpmn
+    public String getContent(ArrayList<Approver> approvers,
+          Group group, 
+          ArrayList<Stage> stages,
+          Request request) {
         ArrayList<ApproveEmail> emails = new ArrayList<ApproveEmail>();
         for (Approver approver : approvers) {
             String name = approver.getFirstName() + " " + approver.getLastName();
@@ -104,8 +105,9 @@ public class EmailDispatcher implements java.io.Serializable {
         return jsonStr;
     }
 
-    public static com.redhat.management.approval.Stage getCurrentStage(com.redhat.management.approval.Group group,
-        java.util.ArrayList<com.redhat.management.approval.Stage> stages) {
+    // Used in bpmn
+    public static Stage getCurrentStage(Group group,
+        ArrayList<Stage> stages) {
         for (Stage stage : stages) {
             if (stage.getGroupRef().equals(group.getUuid()))
                 return stage;
@@ -113,6 +115,7 @@ public class EmailDispatcher implements java.io.Serializable {
         return null; //TODO Exception handler
     }
 
+    // Used in bpmn
     public static String getStageContent(String decision) {
         if (decision == null )
             decision = "undecided";
@@ -123,6 +126,7 @@ public class EmailDispatcher implements java.io.Serializable {
         return decision.equals("denied") ? skip : notify;
     }
 
+    // Used in bpmn
     public static String getStageUrl(Stage stage) {
         String apiUrl = System.getenv("APPROVAL_API_URL");
         return apiUrl + "/api/approval/v1.0/stages/"+ stage.getId()+"/actions";
