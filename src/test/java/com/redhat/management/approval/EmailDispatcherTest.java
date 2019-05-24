@@ -22,10 +22,11 @@ public class EmailDispatcherTest {
     @Test
     public void testGetContent() {
       Request request = InputParser.parseRequest(rawRequest);
-      ArrayList<Stage> stages = InputParser.parseStages(rawStages);
-      ArrayList<Group> groups = InputParser.parseGroups(rawGroups);
+      List<Stage> stages = InputParser.parseStages(rawStages);
+      List<Group> groups = InputParser.parseGroups(rawGroups);
       List<Approver> approvers = groups.get(0).getApprovers();
-      EmailDispatcher dispatcher = new EmailDispatcher(approvers, groups.get(0), stages, request);
+      EmailDispatcher dispatcher = new EmailDispatcher("headers", "url", "body");
+      dispatcher.setBody(approvers, groups.get(0), stages, request);
 
       String body = dispatcher.getBody();
 
