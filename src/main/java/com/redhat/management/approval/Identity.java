@@ -10,6 +10,7 @@ public class Identity implements Serializable {
 
     static final long serialVersionUID = 1L;
 
+    // strange name format for object mapping
     private String account_number;
     private String type;
     private User user;

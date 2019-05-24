@@ -3,11 +3,13 @@ package com.redhat.management.approval;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class ApproveEmailBodyTest {
+public class EmailBodyTest {
     private LinkedHashMap<String, Object> rawRequest;
     private ArrayList<LinkedHashMap<String, Object>> rawGroups;
     private ArrayList<LinkedHashMap<String, Object>> rawStages;
@@ -24,8 +26,8 @@ public class ApproveEmailBodyTest {
       Request request = InputParser.parseRequest(rawRequest);
       ArrayList<Stage> stages = InputParser.parseStages(rawStages);
       ArrayList<Group> groups = InputParser.parseGroups(rawGroups);
-      ArrayList<Approver> approvers = groups.get(0).getApprovers();
-      ApproveEmailBody body = new ApproveEmailBody(request, 
+      List<Approver> approvers = groups.get(0).getApprovers();
+      EmailBody body = new EmailBody(request, 
           approvers.get(0), groups.get(0), stages);
 
       String template = body.getEmailTemplate();
@@ -39,11 +41,11 @@ public class ApproveEmailBodyTest {
       Request request = InputParser.parseRequest(rawRequest);
       ArrayList<Stage> stages = InputParser.parseStages(rawStages);
       ArrayList<Group> groups = InputParser.parseGroups(rawGroups);
-      ArrayList<Approver> approvers = groups.get(0).getApprovers();
-      ApproveEmailBody body = new ApproveEmailBody(request, 
+      List<Approver> approvers = groups.get(0).getApprovers();
+      EmailBody body = new EmailBody(request, 
           approvers.get(0), groups.get(0), stages);
 
-      HashMap<String, String> params = body.getRequestParameters();
+      Map<String, String> params = body.getRequestParameters();
 
       assertNotNull(params);
       System.out.println("params: " + params);
@@ -51,8 +53,8 @@ public class ApproveEmailBodyTest {
 
     @Test
     public void testCustomizeKey() {
-      assertEquals(ApproveEmailBody.customizeKey("order_id"), "Order ID");
-      assertEquals(ApproveEmailBody.customizeKey("order_Id"), "Order ID");
-      assertEquals(ApproveEmailBody.customizeKey("order_iD"), "Order ID");
+      assertEquals(EmailBody.customizeKey("order_id"), "Order ID");
+      assertEquals(EmailBody.customizeKey("order_Id"), "Order ID");
+      assertEquals(EmailBody.customizeKey("order_iD"), "Order ID");
     }
 }

@@ -10,7 +10,7 @@ public class Approver implements Serializable {
 
     static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private int id;
     private String firstName;
     private String lastName;
     private String userName;
@@ -19,11 +19,11 @@ public class Approver implements Serializable {
     public Approver() {
     }
 
-    public Integer getId() {
+    public int getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 

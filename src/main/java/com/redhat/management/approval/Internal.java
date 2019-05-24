@@ -10,6 +10,7 @@ public class Internal implements Serializable {
 
     static final long serialVersionUID = 1L;
 
+    // strange name format for object mapping
     private String org_id;
     private String auth_type;
     private int auth_time;

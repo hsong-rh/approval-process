@@ -1,5 +1,6 @@
 package com.redhat.management.approval;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.io.Serializable;
@@ -13,21 +14,24 @@ public class EmailDispatcher implements Serializable {
 
     static final long serialVersionUID = 1L;
 
-    @org.kie.api.definition.type.Label("Url")
     private String url;
-    @org.kie.api.definition.type.Label("Headers")
     private String headers;
-    @org.kie.api.definition.type.Label("Body")
     private String body;
-
-    public EmailDispatcher() {
-    }
 
     public EmailDispatcher(String headers, String url,
             String body) {
         this.headers = headers;
         this.url = url;
         this.body = body;
+    }
+    
+    public EmailDispatcher(List<Approver> approvers, 
+                           Group group, 
+                           List<Stage> stages, 
+                           Request request) {
+        setHeaders();
+        setUrl();
+        setBody(approvers, group, stages, request);
     }
 
     public void setHeaders(String headers) {
@@ -42,12 +46,11 @@ public class EmailDispatcher implements Serializable {
         this.body = body;
     }
 
-    public String getUrl() {
-        url = System.getenv("BACKOFFICE_URL");
-        return url;
+    public void setUrl() {
+        this.url = System.getenv("BACKOFFICE_URL");
     }
 
-    public String getHeaders() {
+    public void setHeaders() {
         /*
          * x-rh-clientid: <id> x-rh-apitoken: <token> x-rh-insights-env: <env>
          * 
@@ -67,26 +70,24 @@ public class EmailDispatcher implements Serializable {
             headers.append(clientEnv);
         }
         
-        return headers.toString();
+        this.headers = headers.toString();
     }
 
     // Used in bpmn
-    public String getContent(ArrayList<Approver> approvers,
-          Group group, 
-          ArrayList<Stage> stages,
-          Request request) {
-        ArrayList<ApproveEmail> emails = new ArrayList<ApproveEmail>();
+    public void setBody(List<Approver> approvers, Group group, 
+          List<Stage> stages, Request request) {
+        ArrayList<Email> emails = new ArrayList<Email>();
         for (Approver approver : approvers) {
             String name = approver.getFirstName() + " " + approver.getLastName();
             Recipient recipient = new Recipient(name, approver.getEmailAddress());
             ArrayList<String> recipients = new ArrayList<String>();
             recipients.add(recipient.toString());
-            ApproveEmail email = new ApproveEmail(recipients);
+            Email email = new Email(recipients);
             email.setBody(request, approver, group, stages);
             emails.add(email);
         }
 
-        ApproveEmailList list = new ApproveEmailList(emails);
+        EmailList list = new EmailList(emails);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -102,33 +103,18 @@ public class EmailDispatcher implements Serializable {
             e.printStackTrace();
         }
         
-        return jsonStr;
+        this.body = jsonStr;
     }
 
-    // Used in bpmn
-    public static Stage getCurrentStage(Group group,
-        ArrayList<Stage> stages) {
-        for (Stage stage : stages) {
-            if (stage.getGroupRef().equals(group.getUuid()))
-                return stage;
-        }
-        return null; //TODO Exception handler
+    public String getHeaders() {
+        return this.headers;
     }
-
-    // Used in bpmn
-    public static String getStageContent(String decision) {
-        if (decision == null )
-            decision = "undecided";
-
-        String skip = "{\"operation\": \"skip\", \"processed_by\": \"system\"}";
-        String notify = "{\"operation\": \"notify\", \"processed_by\": \"system\"}";
-
-        return decision.equals("denied") ? skip : notify;
+    
+    public String getUrl() {
+        return this.url;
     }
-
-    // Used in bpmn
-    public static String getStageUrl(Stage stage) {
-        String apiUrl = System.getenv("APPROVAL_API_URL");
-        return apiUrl + "/api/approval/v1.0/stages/"+ stage.getId()+"/actions";
+    
+    public String getBody() {
+        return this.body;
     }
 }

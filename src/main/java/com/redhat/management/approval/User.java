@@ -12,6 +12,8 @@ public class User implements Serializable {
 
     private String username;
     private String email;
+
+    // strange names for mapping purpose
     private String first_name;
     private String last_name;
     private Boolean is_active;

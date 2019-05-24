@@ -1,6 +1,8 @@
 package com.redhat.management.approval;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Base64;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -20,11 +22,12 @@ public class Request implements Serializable {
     private String requester;
     private String description;
     private String name;
-    private LinkedHashMap<String, Object> content;
+    private Map<String, Object> content;
     private String createdTime;
     private String id;
     private String tenantId;
-    private LinkedHashMap<String, Object> context;
+    private Map<String, Object> context;
+    private User user;
     
     public Request(LinkedHashMap<String, Object> maps) {
         this.requester = maps.get("requester").toString();
@@ -35,21 +38,22 @@ public class Request implements Serializable {
         this.createdTime = maps.get("created_at").toString();
         this.content = (LinkedHashMap<String, Object>) maps.get("content");
         this.context = (LinkedHashMap<String, Object>) maps.get("context");
+        this.user = getRHIdentity().getUser();
     }
 
-    public LinkedHashMap<String, Object> getContent() {
+    public Map<String, Object> getContent() {
         return this.content;
     }
 
-    public void setContent(LinkedHashMap<String, Object> content) {
+    public void setContent(Map<String, Object> content) {
         this.content = content;
     }
 
-    public LinkedHashMap<String, Object> getContext() {
+    public Map<String, Object> getContext() {
         return this.context;
     }
 
-    public void setContext(LinkedHashMap<String, Object> context) {
+    public void setContext(Map<String, Object> context) {
         this.context = context;
     }
 
@@ -137,11 +141,11 @@ public class Request implements Serializable {
     }
     
     public String getIdentityEmail() {
-        return getRHIdentity().getUser().getEmail();
+        return user.getEmail();
     }
     
     public String getIdentityFullName() {
-        return getRHIdentity().getUser().getFirst_name() + " " + getRHIdentity().getUser().getLast_name();
+        return user.getFirst_name() + " " + user.getLast_name();
     }
     
     public static RHIdentity getRHIdentity(String encodedContext) {
@@ -149,20 +153,20 @@ public class Request implements Serializable {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        RHIdentity identity = new RHIdentity();
+        RHIdentity id = new RHIdentity();
 
         try {
             byte[] decodedBytes = Base64.getDecoder().decode(encodedContext);
             String jsonStr = new String(decodedBytes);
             System.out.println("Decoded identity: " + jsonStr);
-            identity = mapper.readValue(jsonStr, RHIdentity.class);
-            System.out.println("getIdentity: " + identity);
+            id = mapper.readValue(jsonStr, RHIdentity.class);
+            System.out.println("getIdentity: " + id);
         } catch (IOException e) {
               // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        return identity;
+        return id;
     }
 
     public RHIdentity getRHIdentity() {

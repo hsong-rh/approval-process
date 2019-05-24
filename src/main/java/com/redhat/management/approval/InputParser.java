@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,10 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class InputParser implements Serializable {
 
     static final long serialVersionUID = 1L;
-    
-    private final static String DATE_FORMAT_1 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private final static String DATE_FORMAT_2 = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    
+
     public static Request parseRequest(LinkedHashMap<String, Object> requestMaps) {
         return new Request(requestMaps);
     }
@@ -46,9 +44,9 @@ public class InputParser implements Serializable {
                 approvers.add(approver);
             }
     
-            Group group = new Group(rawGroup.get("name").toString(), approvers, 
-                                    rawGroup.get("description").toString(),  
-                                    rawGroup.get("uuid").toString());
+            Group group = new Group((String)rawGroup.get("name"), approvers, 
+                                    (String)rawGroup.get("description"),  
+                                    (String)rawGroup.get("uuid"));
             groups.add(group);
         }
     
@@ -67,29 +65,5 @@ public class InputParser implements Serializable {
         }
     
         return stages;
-    }
-      
-    public static String getCreated(String pattern, String timeStr) throws Exception {
-        DateFormat df = new SimpleDateFormat(pattern);
-        return df.format(getDate(timeStr));
-    }
-    
-    private static Date getDate(String timeStr) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_1);
-        sdf.setLenient(false);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date requestDate = null;
-    
-        try {
-            requestDate = sdf.parse(timeStr); 
-        }
-        catch (ParseException e) {
-            sdf = new SimpleDateFormat(DATE_FORMAT_2);
-            sdf.setLenient(false);
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-            requestDate = sdf.parse(timeStr); 
-        }
-            
-        return requestDate;
     }
 }

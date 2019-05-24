@@ -1,6 +1,6 @@
 package com.redhat.management.approval;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.io.Serializable;
 
 /**
@@ -12,7 +12,7 @@ public class Group implements Serializable {
     static final long serialVersionUID = 1L;
 
     private String name;
-    private ArrayList<Approver> approvers;
+    private List<Approver> approvers;
     private String description;
     private String uuid;
 
@@ -27,12 +27,12 @@ public class Group implements Serializable {
         this.name = name;
     }
 
-    public ArrayList<Approver> getApprovers() {
+    public List<Approver> getApprovers() {
         return this.approvers;
     }
 
     public void setApprovers(
-        ArrayList<Approver> approvers) {
+        List<Approver> approvers) {
         this.approvers = approvers;
     }
 
@@ -63,7 +63,7 @@ public class Group implements Serializable {
     }
 
     public Group(String name,
-            ArrayList<Approver> approvers,
+            List<Approver> approvers,
             String description, String uuid) {
         this.name = name;
         this.approvers = approvers;
