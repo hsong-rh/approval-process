@@ -24,8 +24,8 @@ public class EmailBodyTest {
     @Test
     public void testGetEmailTemplate() {
       Request request = InputParser.parseRequest(rawRequest);
-      ArrayList<Stage> stages = InputParser.parseStages(rawStages);
-      ArrayList<Group> groups = InputParser.parseGroups(rawGroups);
+      List<Stage> stages = InputParser.parseStages(rawStages);
+      List<Group> groups = InputParser.parseGroups(rawGroups);
       List<Approver> approvers = groups.get(0).getApprovers();
       EmailBody body = new EmailBody(request, 
           approvers.get(0), groups.get(0), stages);
@@ -39,8 +39,8 @@ public class EmailBodyTest {
     @Test
     public void testGetRequestParameters() {
       Request request = InputParser.parseRequest(rawRequest);
-      ArrayList<Stage> stages = InputParser.parseStages(rawStages);
-      ArrayList<Group> groups = InputParser.parseGroups(rawGroups);
+      List<Stage> stages = InputParser.parseStages(rawStages);
+      List<Group> groups = InputParser.parseGroups(rawGroups);
       List<Approver> approvers = groups.get(0).getApprovers();
       EmailBody body = new EmailBody(request, 
           approvers.get(0), groups.get(0), stages);
@@ -53,8 +53,15 @@ public class EmailBodyTest {
 
     @Test
     public void testCustomizeKey() {
-      assertEquals(EmailBody.customizeKey("order_id"), "Order ID");
-      assertEquals(EmailBody.customizeKey("order_Id"), "Order ID");
-      assertEquals(EmailBody.customizeKey("order_iD"), "Order ID");
+      Request request = InputParser.parseRequest(rawRequest);
+      List<Stage> stages = InputParser.parseStages(rawStages);
+      List<Group> groups = InputParser.parseGroups(rawGroups);
+      List<Approver> approvers = groups.get(0).getApprovers();
+      EmailBody body = new EmailBody(request, 
+          approvers.get(0), groups.get(0), stages);
+
+      assertEquals(body.customizeKey("order_id"), "Order ID");
+      assertEquals(body.customizeKey("order_Id"), "Order ID");
+      assertEquals(body.customizeKey("order_iD"), "Order ID");
     }
 }

@@ -42,31 +42,6 @@ public class EmailBody implements Serializable {
         return content;
     }
 
-    public String getEmailBody() {
-        String template = getEmailTemplate();
-        Map<String, String> values = getRequestParameters();
-
-        StrSubstitutor sub = new StrSubstitutor(values);
-        return sub.replace(template);
-    }
-    
-    public static String getUrlContent(URL url) throws Exception {
-        URLConnection connection = url.openConnection();
-        BufferedReader in = new BufferedReader(
-                              new InputStreamReader(
-                                connection.getInputStream()));
-
-        StringBuilder content = new StringBuilder();
-        String inputLine;
-
-        while ((inputLine = in.readLine()) != null) 
-            content.append(inputLine);
-
-        in.close();
-
-        return content.toString();
-    }
-
     public Map<String, String> getRequestParameters() {
         Stage currentStage = ApprovalApiHelper.findStageByGroup(group, stages);
         Map<String, Object> request_content = request.getContent();
@@ -96,8 +71,8 @@ public class EmailBody implements Serializable {
         }
 
         try {
-            String date = ApprovalApiHelper.toDateString("dd MMM yyyy", request.getCreatedTime());
-            String time = ApprovalApiHelper.toDateString("HH:mm:ss", request.getCreatedTime());
+            String date = ApprovalApiHelper.formatDate("dd MMM yyyy", request.getCreatedTime());
+            String time = ApprovalApiHelper.formatDate("HH:mm:ss", request.getCreatedTime());
             values.put("order_date", date);
             values.put("order_time", time);
         } catch (Exception e1) {
@@ -113,36 +88,11 @@ public class EmailBody implements Serializable {
 
         return values;
     }
-    
-    public String getRequestContentLines(Map<String, Object> contents) {
-        StringBuilder lines = new StringBuilder();
-        for (HashMap.Entry<String, Object> entry : contents.entrySet()) {
-            if (entry.getKey().equals("params"))
-                continue;
-  
-            String line = "<strong>" + customizeKey(entry.getKey()) + ":</strong>" + entry.getValue().toString() + "<br>";
-            lines.append(line);
-        }
-        System.out.println("Request content: "+ lines);
-        return lines.toString();
-    }
-    
-    public static String customizeKey(String key) {
+
+    public String customizeKey(String key) {
         return StringUtils.capitalize(key.replace("_", " ").replaceAll("(?i)id", "ID"));
     }
 
-    public String getParamsTable(HashMap<String, String> params) {
-        StringBuilder paramsTable = new StringBuilder(
-                "<table><tbody><tr><td><strong>Key</strong></td><td><strong>Value<strong></td></tr>\n");
-        
-        for (HashMap.Entry<String, String> entry: params.entrySet()) {
-            String param = "<tr><td>" + entry.getKey() + "</td><td>" + entry.getValue() + "</td></tr>\n";
-            paramsTable.append(param);
-        };
-        paramsTable.append("</tbody></table>");
-        return paramsTable.toString();
-    }
-    
     public Request getRequest() {
         return this.request;
     }
@@ -171,19 +121,68 @@ public class EmailBody implements Serializable {
         return this.stages;
     }
 
-    public void setStages(
-            List<Stage> stages) {
+    public void setStages(List<Stage> stages) {
         this.stages = stages;
     }
 
-    public EmailBody(Request request,
-            Approver approver,
-            Group group,
-            List<Stage> stages) {
+    public EmailBody(Request request, Approver approver, Group group, List<Stage> stages) {
         this.request = request;
         this.approver = approver;
         this.group = group;
         this.stages = stages;
+    }
+
+    public String toString() {
+        String template = getEmailTemplate();
+        Map<String, String> values = getRequestParameters();
+
+        StrSubstitutor sub = new StrSubstitutor(values);
+        return sub.replace(template);
+    }
+
+    private static String getUrlContent(URL url) throws Exception {
+        URLConnection connection = url.openConnection();
+        BufferedReader in = new BufferedReader(
+                              new InputStreamReader(
+                                connection.getInputStream()));
+
+        StringBuilder content = new StringBuilder();
+        String inputLine;
+
+        try {
+            while ((inputLine = in.readLine()) != null) 
+                content.append(inputLine);
+        }
+        finally {
+            in.close();
+        }
+
+        return content.toString();
+    }
+
+    private String getRequestContentLines(Map<String, Object> contents) {
+        StringBuilder lines = new StringBuilder();
+        for (HashMap.Entry<String, Object> entry : contents.entrySet()) {
+            if (entry.getKey().equals("params"))
+                continue;
+  
+            String line = "<strong>" + customizeKey(entry.getKey()) + ":</strong>" + entry.getValue().toString() + "<br>";
+            lines.append(line);
+        }
+        System.out.println("Request content: "+ lines);
+        return lines.toString();
+    }
+
+    private String getParamsTable(HashMap<String, String> params) {
+        StringBuilder paramsTable = new StringBuilder(
+                "<table><tbody><tr><td><strong>Key</strong></td><td><strong>Value<strong></td></tr>\n");
+        
+        for (HashMap.Entry<String, String> entry: params.entrySet()) {
+            String param = "<tr><td>" + entry.getKey() + "</td><td>" + entry.getValue() + "</td></tr>\n";
+            paramsTable.append(param);
+        };
+        paramsTable.append("</tbody></table>");
+        return paramsTable.toString();
     }
 
 }

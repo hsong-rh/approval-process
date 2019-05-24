@@ -20,8 +20,11 @@ public class ApprovalApiHelper implements java.io.Serializable {
     
     private final static String DATE_FORMAT_1 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private final static String DATE_FORMAT_2 = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private final static String SKIP = "{\"operation\": \"skip\", \"processed_by\": \"system\"}";
+    private final static String NOTIFY = "{\"operation\": \"notify\", \"processed_by\": \"system\"}";
 
-    public static String toDateString(String pattern, String timeStr) throws Exception {
+
+    public static String formatDate(String pattern, String timeStr) throws Exception {
         DateFormat df = new SimpleDateFormat(pattern);
         return df.format(getDate(timeStr));
     }
@@ -31,9 +34,9 @@ public class ApprovalApiHelper implements java.io.Serializable {
         if (date == null) {
             date = getDate(timeStr, DATE_FORMAT_2);
         }
-        
+
         if (date == null) {
-            throw new Exception("Can not parse: " + timeStr);
+            throw new Exception("Cannot parse: " + timeStr);
         }
         return date;
     }
@@ -54,8 +57,7 @@ public class ApprovalApiHelper implements java.io.Serializable {
     }
     
     // Used in bpmn
-    public static Stage findStageByGroup(Group group,
-        List<Stage> stages) {
+    public static Stage findStageByGroup(Group group, List<Stage> stages) {
         for (Stage stage : stages) {
             if (stage.getGroupRef().equals(group.getUuid()))
                 return stage;
@@ -65,18 +67,12 @@ public class ApprovalApiHelper implements java.io.Serializable {
 
     // Used in bpmn
     public static String getStageContent(String decision) {
-        if (decision == null )
-            decision = "undecided";
-
-        String skip = "{\"operation\": \"skip\", \"processed_by\": \"system\"}";
-        String notify = "{\"operation\": \"notify\", \"processed_by\": \"system\"}";
-
-        return decision.equals("denied") ? skip : notify;
+        return decision.equals("denied") ? SKIP : NOTIFY;
     }
 
     // Used in bpmn
     public static String getStageUrl(Stage stage) {
         String apiUrl = System.getenv("APPROVAL_API_URL");
-        return apiUrl + "/api/approval/v1.0/stages/"+ stage.getId()+"/actions";
+        return apiUrl + "/api/approval/v1.0/stages/"+ stage.getId() +"/actions";
     }
 }

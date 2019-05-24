@@ -35,7 +35,6 @@ public class TestResources {
         LinkedHashMap<String, Object> rawRequest = new LinkedHashMap();
         rawRequest.put("name", REQUEST_NAME);
         rawRequest.put("requester", REQUESTER);
-        rawRequest.put("description", DESCRIPTION);
         rawRequest.put("id", ID);
         rawRequest.put("tenant_id", TENANT_ID);
         rawRequest.put("created_at", CREATED_AT);
@@ -66,7 +65,6 @@ public class TestResources {
 
         LinkedHashMap<String, Object> group = new LinkedHashMap();
         group.put("name", GROUP_NAME);
-        group.put("description", DESCRIPTION);
         group.put("uuid", GROUP_REF);
         group.put("users", users);
 
@@ -95,7 +93,6 @@ public class TestResources {
     public static String ORIGINAL_URL = "TESTING_URL";
     public static String REQUEST_NAME = "TESTING_REQUEST_NAME";
     public static String REQUESTER = "TESTING_REQUESTER";
-    public static String DESCRIPTION = "TESTING_DESCRIPTION";
     public static String ID = "TESTING_ID";
     public static String TENANT_ID = "TESTING_ID";
     public static String CREATED_AT = "2019-05-01T14:08:06.377Z";

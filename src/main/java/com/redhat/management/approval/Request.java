@@ -20,7 +20,6 @@ public class Request implements Serializable {
     static final long serialVersionUID = 1L;
 
     private String requester;
-    private String description;
     private String name;
     private Map<String, Object> content;
     private String createdTime;
@@ -29,9 +28,8 @@ public class Request implements Serializable {
     private Map<String, Object> context;
     private User user;
     
-    public Request(LinkedHashMap<String, Object> maps) {
+    public Request(Map<String, Object> maps) {
         this.requester = maps.get("requester").toString();
-        this.description = maps.get("description").toString();
         this.id = maps.get("id").toString();
         this.tenantId = maps.get("tenant_id").toString();
         this.name = maps.get("name").toString();
@@ -65,14 +63,6 @@ public class Request implements Serializable {
         this.requester = requester;
     }
 
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getName() {
         return this.name;
     }
@@ -86,7 +76,6 @@ public class Request implements Serializable {
 
     public String toString() {
         return "Request: " + "\n name: " + this.name
-                + "\n description: " + this.description
                 + "\n id: " + this.id
                 + "\n tenant id: " + this.tenantId
                 + "\n content: " + this.content
@@ -117,27 +106,16 @@ public class Request implements Serializable {
         this.tenantId = tenantId;
     }
 
-    public Request(String requester, String description,
-            String name, String createdTime,
-            String id, String tenant_id) {
+    public Request(String requester, String name, String createdTime, String id, String tenant_id) {
         this.requester = requester;
-        this.description = description;
         this.name = name;
         this.createdTime = createdTime;
         this.id = id;
         this.tenantId = tenantId;
     }
-    
-    public LinkedHashMap<String, Object> getHeaders() {
-        return (LinkedHashMap<String, Object>) this.context.get("headers");
-    }
-    
+
     public String getOriginalUrl() {
         return this.context.get("original_url").toString();
-    }
-    
-    public String getEncodedIdentity() {
-        return getHeaders().get("x-rh-identity").toString();
     }
     
     public String getIdentityEmail() {
@@ -148,7 +126,44 @@ public class Request implements Serializable {
         return user.getFirst_name() + " " + user.getLast_name();
     }
     
-    public static RHIdentity getRHIdentity(String encodedContext) {
+    public RHIdentity getRHIdentity() {
+        return toRHIdentity(getEncodedIdentity());
+    }
+
+    // Used by BPMN
+    public String createSysadminIdentity() {
+        RHIdentity rhid = getRHIdentity();
+
+        rhid.getUser().setUsername("sysadmin");
+        rhid.getUser().setEmail("sysadmin");
+        rhid.getUser().setFirst_name("sysadmin");
+        rhid.getUser().setLast_name("sysadmin");
+        String id = "x-rh-identity=" + createEncodedIdentity(rhid);
+        return id;
+    }
+
+    private String createEncodedIdentity(RHIdentity id) {
+        ObjectMapper Obj = new ObjectMapper();
+        Obj.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        String encoded = "";
+
+        try {
+            String jsonStr = Obj.writeValueAsString(id);
+            byte[] bytes = jsonStr.getBytes("UTF-8");
+            encoded = Base64.getEncoder().encodeToString(bytes);
+        }
+        catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace(); 
+        }
+
+        return encoded.replace("=", "");
+    }  
+
+    private RHIdentity toRHIdentity(String encodedContext) {
         System.out.println("getIdentity: encoded context = " + encodedContext);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -169,40 +184,11 @@ public class Request implements Serializable {
         return id;
     }
 
-    public RHIdentity getRHIdentity() {
-        return getRHIdentity(getEncodedIdentity());
+    private LinkedHashMap<String, Object> getHeaders() {
+        return (LinkedHashMap<String, Object>) this.context.get("headers");
     }
 
-    // Used by BPMN
-    public String createSysadminIdentity() {
-        RHIdentity rhid = getRHIdentity();
-
-        rhid.getUser().setUsername("sysadmin");
-        rhid.getUser().setEmail("sysadmin");
-        rhid.getUser().setFirst_name("sysadmin");
-        rhid.getUser().setLast_name("sysadmin");
-        String id = "x-rh-identity=" + createEncodedIdentity(rhid);
-        return id;
+    private String getEncodedIdentity() {
+        return getHeaders().get("x-rh-identity").toString();
     }
-
-    public String createEncodedIdentity(RHIdentity id) {
-        ObjectMapper Obj = new ObjectMapper();
-        Obj.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        String encoded = "";
-
-        try {
-            String jsonStr = Obj.writeValueAsString(id);
-            byte[] bytes = jsonStr.getBytes("UTF-8");
-            encoded = Base64.getEncoder().encodeToString(bytes);
-        }
-        catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace(); 
-        }
-
-        return encoded.replace("=", "");
-    }  
 }

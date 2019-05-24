@@ -13,12 +13,13 @@ public class User implements Serializable {
     private String username;
     private String email;
 
-    // strange names for mapping purpose
+    // This class models an user object passed in as a map.
+    // The attribute names must exactly match the keys in the map for object mapping.
     private String first_name;
     private String last_name;
-    private Boolean is_active;
-    private Boolean is_org_admin;
-    private Boolean is_internal;
+    private boolean is_active;
+    private boolean is_org_admin;
+    private boolean is_internal;
     private String locale;
 
     public User() {
@@ -56,27 +57,27 @@ public class User implements Serializable {
         this.last_name = last_name;
     }
 
-    public Boolean getIs_active() {
+    public boolean getIs_active() {
         return this.is_active;
     }
 
-    public void setIs_active(Boolean is_active) {
+    public void setIs_active(boolean is_active) {
         this.is_active = is_active;
     }
 
-    public Boolean getIs_org_admin() {
+    public boolean getIs_org_admin() {
         return this.is_org_admin;
     }
 
-    public void setIs_org_admin(Boolean is_org_admin) {
+    public void setIs_org_admin(boolean is_org_admin) {
         this.is_org_admin = is_org_admin;
     }
 
-    public Boolean getIs_internal() {
+    public boolean getIs_internal() {
         return this.is_internal;
     }
 
-    public void setIs_internal(Boolean is_internal) {
+    public void setIs_internal(boolean is_internal) {
         this.is_internal = is_internal;
     }
 
@@ -90,8 +91,8 @@ public class User implements Serializable {
 
     public User(String username, String email,
             String first_name, String last_name,
-            Boolean is_active, Boolean is_org_admin,
-            Boolean is_internal, String locale) {
+            boolean is_active, boolean is_org_admin,
+            boolean is_internal, String locale) {
         this.username = username;
         this.email = email;
         this.first_name = first_name;

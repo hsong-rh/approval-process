@@ -24,46 +24,44 @@ public class InputParser implements Serializable {
 
     static final long serialVersionUID = 1L;
 
-    public static Request parseRequest(LinkedHashMap<String, Object> requestMaps) {
+    public static Request parseRequest(Map<String, Object> requestMaps) {
         return new Request(requestMaps);
     }
-    
+
     /*
-     group 1: {name=g_abc, description=desc, uuid=1234, users=[{username=abc, email=abc@123.com, first_name=abc, last_name=def}, {username=bcd,
+     group 1: {name=g_abc, uuid=1234, users=[{username=abc, email=abc@123.com, first_name=abc, last_name=def}, {username=bcd,
     email=bcd@123.com, first_name=bcd, last_name=efg}]}
     */
 
-    public static ArrayList<Group> parseGroups(ArrayList<LinkedHashMap<String, Object>> rawGroups) {
-        ArrayList<Group> groups = new ArrayList<Group>();
+    public static List<Group> parseGroups(List<LinkedHashMap<String, Object>> rawGroups) {
+        List<Group> groups = new ArrayList<Group>();
         for (LinkedHashMap<String, Object> rawGroup : rawGroups) {
             ArrayList<LinkedHashMap<String, String>> rawApprovers = (ArrayList<LinkedHashMap<String, String>>) rawGroup.get("users");
             ArrayList<Approver> approvers = new ArrayList<Approver>();
-    
+
             for (LinkedHashMap<String, String> rawApprover : rawApprovers) {
                 Approver approver = new Approver(rawApprover.get("username"), rawApprover.get("email"), rawApprover.get("first_name"), rawApprover.get("last_name"));
                 approvers.add(approver);
             }
-    
-            Group group = new Group((String)rawGroup.get("name"), approvers, 
-                                    (String)rawGroup.get("description"),  
-                                    (String)rawGroup.get("uuid"));
+
+            Group group = new Group((String)rawGroup.get("name"), approvers, (String)rawGroup.get("uuid"));
             groups.add(group);
         }
-    
+
         return groups;
     }
-      
-    public static ArrayList<Stage> parseStages(ArrayList<LinkedHashMap<String, Object>> rawStages) {
-    
-        ArrayList<Stage> stages = new ArrayList<Stage>();
+
+    public static List<Stage> parseStages(List<LinkedHashMap<String, Object>> rawStages) {
+
+        List<Stage> stages = new ArrayList<Stage>();
         for (LinkedHashMap<String, Object> rawStage : rawStages) {
             Stage stage = new Stage(rawStage.get("id").toString(), 
                                     rawStage.get("random_access_key").toString(), 
-                                    rawStage.get("created_at").toString(), 
+                                    rawStage.get("created_at").toString(),
                                     rawStage.get("group_ref").toString());
             stages.add(stage);
         }
-    
+
         return stages;
     }
 }

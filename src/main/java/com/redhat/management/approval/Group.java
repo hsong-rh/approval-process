@@ -13,7 +13,6 @@ public class Group implements Serializable {
 
     private String name;
     private List<Approver> approvers;
-    private String description;
     private String uuid;
 
     public Group() {
@@ -31,22 +30,13 @@ public class Group implements Serializable {
         return this.approvers;
     }
 
-    public void setApprovers(
-        List<Approver> approvers) {
+    public void setApprovers(List<Approver> approvers) {
         this.approvers = approvers;
     }
 
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String toString() {
-        String groupStr = "\nGroup: " + "\n name: " + this.name
-                + "\n description: " + this.description + "\n ref: " + this.uuid;
+        String groupStr = "Group: " + "\n name: " + this.name
+                + "\n ref: " + this.uuid;
 
         for (Approver approver : approvers) {
             groupStr = groupStr + approver;
@@ -62,12 +52,9 @@ public class Group implements Serializable {
         this.uuid = uuid;
     }
 
-    public Group(String name,
-            List<Approver> approvers,
-            String description, String uuid) {
+    public Group(String name, List<Approver> approvers, String uuid) {
         this.name = name;
         this.approvers = approvers;
-        this.description = description;
         this.uuid = uuid;
     }
 

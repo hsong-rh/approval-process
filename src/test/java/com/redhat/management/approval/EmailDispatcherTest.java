@@ -35,8 +35,8 @@ public class EmailDispatcherTest {
 
     @Test
     public void testGetCurrentStage() {
-      ArrayList<Stage> stages = InputParser.parseStages(rawStages);
-      ArrayList<Group> groups = InputParser.parseGroups(rawGroups);
+      List<Stage> stages = InputParser.parseStages(rawStages);
+      List<Group> groups = InputParser.parseGroups(rawGroups);
 
       Stage stage = ApprovalApiHelper.findStageByGroup(groups.get(0), stages);
 

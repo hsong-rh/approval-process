@@ -10,7 +10,8 @@ public class Internal implements Serializable {
 
     static final long serialVersionUID = 1L;
 
-    // strange name format for object mapping
+    // This class models an internal object passed in as a map.
+    // The attribute names must exactly match the keys in the map for object mapping.
     private String org_id;
     private String auth_type;
     private int auth_time;

@@ -18,7 +18,7 @@ public class RequestTest {
     @Test
     public void testGetRHIdentity() {
         Request request = new Request(rawRequest);
-        RHIdentity id = request.getRHIdentity(TestResources.ENCODED_USER);
+        RHIdentity id = request.getRHIdentity();
 
         assertEquals(id.getUser().getUsername(), "jdoe");
         assertEquals(id.getUser().getFirst_name(), "John");

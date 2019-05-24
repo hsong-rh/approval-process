@@ -10,7 +10,8 @@ public class Identity implements Serializable {
 
     static final long serialVersionUID = 1L;
 
-    // strange name format for object mapping
+    // This class models an identity object passed in as a map.
+    // The attribute names must exactly match the keys in the map for object mapping.    
     private String account_number;
     private String type;
     private User user;
@@ -51,9 +52,7 @@ public class Identity implements Serializable {
         this.internal = internal;
     }
 
-    public Identity(String account_number, String type,
-            User user,
-            Internal internal) {
+    public Identity(String account_number, String type, User user, Internal internal) {
         this.account_number = account_number;
         this.type = type;
         this.user = user;
@@ -61,7 +60,7 @@ public class Identity implements Serializable {
     }
     
     public String toString() {
-    return "Identity: " +
+        return "Identity: " +
       "\n   account_number: " + account_number +
       "\n   type: " + type +
       "\n   : " + user +

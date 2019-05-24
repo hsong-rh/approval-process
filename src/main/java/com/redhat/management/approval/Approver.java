@@ -59,8 +59,7 @@ public class Approver implements Serializable {
         this.emailAddress = emailAddress;
     }
 
-    public Approver(String userName, String emailAddress, 
-            String firstName, String lastName) {
+    public Approver(String userName, String emailAddress, String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
@@ -68,7 +67,7 @@ public class Approver implements Serializable {
     }
     
     public String toString() {
-        return "\nApprover: " +
+        return "Approver: " +
         "\n firstName: " + this.firstName +
         "\n lastName: " + this.lastName +
         "\n userName: " + this.userName +

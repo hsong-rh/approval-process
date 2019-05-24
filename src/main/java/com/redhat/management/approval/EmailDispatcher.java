@@ -18,19 +18,15 @@ public class EmailDispatcher implements Serializable {
     private String headers;
     private String body;
 
-    public EmailDispatcher(String headers, String url,
-            String body) {
+    public EmailDispatcher(String headers, String url, String body) {
         this.headers = headers;
         this.url = url;
         this.body = body;
     }
     
-    public EmailDispatcher(List<Approver> approvers, 
-                           Group group, 
-                           List<Stage> stages, 
-                           Request request) {
-        setHeaders();
-        setUrl();
+    public EmailDispatcher(List<Approver> approvers, Group group, List<Stage> stages, Request request) {
+        setHeaders(defaultHeaders());
+        setUrl(defaultUrl());
         setBody(approvers, group, stages, request);
     }
 
@@ -46,11 +42,11 @@ public class EmailDispatcher implements Serializable {
         this.body = body;
     }
 
-    public void setUrl() {
-        this.url = System.getenv("BACKOFFICE_URL");
+    public String defaultUrl() {
+        return System.getenv("BACKOFFICE_URL");
     }
 
-    public void setHeaders() {
+    public String defaultHeaders() {
         /*
          * x-rh-clientid: <id> x-rh-apitoken: <token> x-rh-insights-env: <env>
          * 
@@ -70,12 +66,11 @@ public class EmailDispatcher implements Serializable {
             headers.append(clientEnv);
         }
         
-        this.headers = headers.toString();
+        return headers.toString();
     }
 
     // Used in bpmn
-    public void setBody(List<Approver> approvers, Group group, 
-          List<Stage> stages, Request request) {
+    public void setBody(List<Approver> approvers, Group group, List<Stage> stages, Request request) {
         ArrayList<Email> emails = new ArrayList<Email>();
         for (Approver approver : approvers) {
             String name = approver.getFirstName() + " " + approver.getLastName();
