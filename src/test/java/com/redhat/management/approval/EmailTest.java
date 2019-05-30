@@ -4,13 +4,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ApproveEmailTest {
-    public ArrayList<String> recipients = new ArrayList<String>();
+public class EmailTest {
+    public List<String> recipients = new ArrayList<String>();
 
     @Test
     public void testGetSubjectTest() {
-        ApproveEmail email = new ApproveEmail(recipients);
+        Email email = new Email(recipients);
         String subject = email.getSubject();
 
         assertEquals(subject, "Catalog : Approval Order ");

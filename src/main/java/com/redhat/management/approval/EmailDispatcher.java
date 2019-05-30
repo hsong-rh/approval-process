@@ -1,52 +1,52 @@
 package com.redhat.management.approval;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
+import java.io.Serializable;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 
-public class EmailDispatcher implements java.io.Serializable {
+public class EmailDispatcher implements Serializable {
 
     static final long serialVersionUID = 1L;
 
-    @org.kie.api.definition.type.Label("Url")
-    private java.lang.String url;
-    @org.kie.api.definition.type.Label("Headers")
-    private java.lang.String headers;
-    @org.kie.api.definition.type.Label("Body")
-    private java.lang.String body;
+    private String url;
+    private String headers;
+    private String body;
 
-    public EmailDispatcher() {
-    }
-
-    public void setHeaders(java.lang.String headers) {
-        this.headers = headers;
-    }
-
-    public void setUrl(java.lang.String url) {
-        this.url = url;
-    }
-
-    public void setBody(java.lang.String body) {
-        this.body = body;
-    }
-
-    public EmailDispatcher(java.lang.String headers, java.lang.String url,
-            java.lang.String body) {
+    public EmailDispatcher(String headers, String url, String body) {
         this.headers = headers;
         this.url = url;
         this.body = body;
     }
-
-    public String getUrl() {
-        url = System.getenv("BACKOFFICE_URL");
-        return url;
+    
+    public EmailDispatcher(List<Approver> approvers, Group group, List<Stage> stages, Request request) {
+        setHeaders(defaultHeaders());
+        setUrl(defaultUrl());
+        setBody(approvers, group, stages, request);
     }
 
-    public String getHeaders() {
+    public void setHeaders(String headers) {
+        this.headers = headers;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String defaultUrl() {
+        return System.getenv("BACKOFFICE_URL");
+    }
+
+    public String defaultHeaders() {
         /*
          * x-rh-clientid: <id> x-rh-apitoken: <token> x-rh-insights-env: <env>
          * 
@@ -69,23 +69,20 @@ public class EmailDispatcher implements java.io.Serializable {
         return headers.toString();
     }
 
-    public String getContent(ArrayList<com.redhat.management.approval.Approver> approvers,
-          com.redhat.management.approval.Group group, 
-          ArrayList<com.redhat.management.approval.Stage> stages,
-          com.redhat.management.approval.Request request) {
-
-        ArrayList<ApproveEmail> emails = new ArrayList<ApproveEmail>();
+    // Used in bpmn
+    public void setBody(List<Approver> approvers, Group group, List<Stage> stages, Request request) {
+        ArrayList<Email> emails = new ArrayList<Email>();
         for (Approver approver : approvers) {
             String name = approver.getFirstName() + " " + approver.getLastName();
             Recipient recipient = new Recipient(name, approver.getEmailAddress());
             ArrayList<String> recipients = new ArrayList<String>();
             recipients.add(recipient.toString());
-            ApproveEmail email = new ApproveEmail(recipients);
+            Email email = new Email(recipients);
             email.setBody(request, approver, group, stages);
             emails.add(email);
         }
 
-        ApproveEmailList list = new ApproveEmailList(emails);
+        EmailList list = new EmailList(emails);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -101,30 +98,18 @@ public class EmailDispatcher implements java.io.Serializable {
             e.printStackTrace();
         }
         
-        return jsonStr;
+        this.body = jsonStr;
     }
 
-    public static com.redhat.management.approval.Stage getCurrentStage(com.redhat.management.approval.Group group,
-        java.util.ArrayList<com.redhat.management.approval.Stage> stages) {
-        for (Stage stage : stages) {
-            if (stage.getGroupRef().equals(group.getUuid()))
-                return stage;
-        }
-        return null; //TODO Exception handler
+    public String getHeaders() {
+        return this.headers;
     }
-
-    public static String getStageContent(String decision) {
-        if (decision == null )
-            decision = "undecided";
-
-        String skip = "{\"operation\": \"skip\", \"processed_by\": \"system\"}";
-        String notify = "{\"operation\": \"notify\", \"processed_by\": \"system\"}";
-
-        return decision.equals("denied") ? skip : notify;
+    
+    public String getUrl() {
+        return this.url;
     }
-
-    public static String getStageUrl(Stage stage) {
-        String apiUrl = System.getenv("APPROVAL_API_URL");
-        return apiUrl + "/api/approval/v1.0/stages/"+ stage.getId()+"/actions";
+    
+    public String getBody() {
+        return this.body;
     }
 }
