@@ -67,12 +67,29 @@ public class ApprovalApiHelper implements java.io.Serializable {
 
     // Used in bpmn
     public static String getStageContent(String decision) {
-        return decision.equals("denied") ? SKIP : NOTIFY;
+        switch (decision) {
+            case "denied":
+            case "canceled":
+                return SKIP;
+            default:
+                return NOTIFY;
+        }
     }
 
     // Used in bpmn
     public static String getStageUrl(Stage stage) {
         String apiUrl = System.getenv("APPROVAL_API_URL");
         return apiUrl + "/api/approval/v1.0/stages/"+ stage.getId() +"/actions";
+    }
+
+    // Used in bpmn
+    public static boolean isStageSkipped(String action) {
+        switch (action) {
+            case "denied":
+            case "canceled":
+                return true;
+            default:
+                return false;
+        }
     }
 }
