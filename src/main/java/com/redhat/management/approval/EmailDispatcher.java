@@ -78,6 +78,7 @@ public class EmailDispatcher implements Serializable {
             ArrayList<String> recipients = new ArrayList<String>();
             recipients.add(recipient.toString());
             Email email = new Email(recipients);
+            email.setSubject(request.getId(), request.getName());
             email.setBody(request, approver, group, stages);
             emails.add(email);
         }

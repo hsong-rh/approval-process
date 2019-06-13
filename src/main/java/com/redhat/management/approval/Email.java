@@ -24,6 +24,10 @@ public class Email implements Serializable {
         this.subject = subject;
     }
 
+    public void setSubject(String requestID, String requestName) {
+        this.subject = "Catalog:Approval Order " + requestID + ": " + requestName;
+    }
+
     public String getBodyType() {
         return this.bodyType;
     }
