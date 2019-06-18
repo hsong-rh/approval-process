@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class ApprovalApiHelper implements java.io.Serializable {
 
     static final long serialVersionUID = 1L;
-    
+
     private final static String DATE_FORMAT_1 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private final static String DATE_FORMAT_2 = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private final static String SKIP = "{\"operation\": \"skip\", \"processed_by\": \"system\"}";
@@ -28,7 +28,7 @@ public class ApprovalApiHelper implements java.io.Serializable {
         DateFormat df = new SimpleDateFormat(pattern);
         return df.format(getDate(timeStr));
     }
-    
+
     public static Date getDate(String timeStr) throws Exception {
         Date date = getDate(timeStr, DATE_FORMAT_1);
         if (date == null) {
@@ -55,7 +55,7 @@ public class ApprovalApiHelper implements java.io.Serializable {
         }
         return requestDate;
     }
-    
+
     // Used in bpmn
     public static Stage findStageByGroup(Group group, List<Stage> stages) {
         for (Stage stage : stages) {
@@ -67,12 +67,16 @@ public class ApprovalApiHelper implements java.io.Serializable {
 
     // Used in bpmn
     public static String getStageContent(String decision) {
-        return decision.equals("denied") ? SKIP : NOTIFY;
+        return isStageSkippable(decision) ? SKIP : NOTIFY;
     }
 
     // Used in bpmn
     public static String getStageUrl(Stage stage) {
         String apiUrl = System.getenv("APPROVAL_API_URL");
         return apiUrl + "/api/approval/v1.0/stages/"+ stage.getId() +"/actions";
+    }
+
+    public static boolean isStageSkippable(String action) {
+        return (action.equals("denied") || action.equals("canceled"));
     }
 }
