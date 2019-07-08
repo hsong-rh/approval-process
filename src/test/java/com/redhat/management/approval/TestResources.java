@@ -34,7 +34,7 @@ public class TestResources {
 
         LinkedHashMap<String, Object> rawRequest = new LinkedHashMap();
         rawRequest.put("name", REQUEST_NAME);
-        rawRequest.put("requester", REQUESTER);
+        rawRequest.put("requester_name", REQUESTER);
         rawRequest.put("id", ID);
         rawRequest.put("tenant_id", TENANT_ID);
         rawRequest.put("created_at", CREATED_AT);

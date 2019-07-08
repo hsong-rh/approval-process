@@ -29,7 +29,7 @@ public class Request implements Serializable {
     private User user;
     
     public Request(Map<String, Object> maps) {
-        this.requester = maps.get("requester").toString();
+        this.requester = maps.get("requester_name").toString();
         this.id = maps.get("id").toString();
         this.tenantId = maps.get("tenant_id").toString();
         this.name = maps.get("name").toString();
