@@ -178,7 +178,7 @@ public class EmailBody implements Serializable {
                 "<table><tbody><tr><td><strong>Key</strong></td><td><strong>Value<strong></td></tr>\n");
         
         for (HashMap.Entry<String, String> entry: params.entrySet()) {
-            String param = "<tr><td>" + entry.getKey() + "</td><td>" + entry.getValue() + "</td></tr>\n";
+            String param = "<tr><td>" + entry.getKey() + "</td><td>" + entry.getValue().toString() + "</td></tr>\n";
             paramsTable.append(param);
         };
         paramsTable.append("</tbody></table>");
