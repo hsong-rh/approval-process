@@ -9,15 +9,17 @@ import java.util.LinkedHashMap;
 
 public class RequestTest {
     private LinkedHashMap<String, Object> rawRequest;
+    private RequestPacket rawRequestPacket;
 
     @Before
     public void setUp() {
         rawRequest = TestResources.getRawRequest();
+        rawRequestPacket = TestResources.getRawRequestPacket();
     }
 
     @Test
     public void testGetRHIdentity() {
-        Request request = new Request(rawRequest);
+        Request request = new Request(rawRequest, rawRequestPacket);
         RHIdentity id = request.getRHIdentity();
 
         assertEquals(id.getUser().getUsername(), "jdoe");
@@ -28,7 +30,7 @@ public class RequestTest {
 
     @Test
     public void testCreateSysadminIdentity() {
-        Request request = new Request(rawRequest);
+        Request request = new Request(rawRequest, rawRequestPacket);
         String sysadmin = request.createSysadminIdentity();
 
         assertNotNull(sysadmin);

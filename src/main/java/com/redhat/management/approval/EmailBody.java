@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.net.URL;
 import java.net.URLConnection;
@@ -25,10 +26,9 @@ public class EmailBody implements Serializable {
     static final long serialVersionUID = 1L;
     private static String templateFile = "EmailTemplate.html";
 
-    private Request request;
     private Approver approver;
     private Group group;
-    private List<Stage> stages;
+    private Request request;
 
     public String getEmailTemplate() {
         URL url = EmailBody.class.getResource(templateFile);
@@ -43,23 +43,22 @@ public class EmailBody implements Serializable {
     }
 
     public Map<String, String> getRequestParameters() {
-        Stage currentStage = ApprovalApiHelper.findStageByGroup(group, stages);
-        Map<String, Object> request_content = request.getContent();
+        Map<String, Object> request_content = getContent();
 
         Map<String, String> values = new HashMap<String, String>();
         values.put("approver_name", approver.getFirstName() + " " + approver.getLastName());
-        values.put("requester_name", (String) request.getIdentityFullName());
-        values.put("orderer_email", request.getIdentityEmail());
+        values.put("requester_name", getIdentityFullName());
+        values.put("orderer_email", getIdentityEmail());
         values.put("contents", getRequestContentLines(request_content));
 
         String webUrl = System.getenv("APPROVAL_WEB_URL");
         try {
             byte[] bytes = approver.getUserName().getBytes("UTF-8");
             String encoded_user = Base64.getEncoder().encodeToString(bytes);
-            String approveLink = webUrl + "/api/approval/v1.0/stageaction/" + currentStage.getRandomAccessKey() + "?approver=" + encoded_user;
+            String approveLink = webUrl + "/api/approval/v1.0/stageaction/" + request.getRandomAccessKey() + "?approver=" + encoded_user;
             values.put("approve_link", approveLink);
 
-            String orderLink = webUrl + "/hybrid/catalog/approval/requests/detail/" + request.getId();
+            String orderLink = webUrl + "/hybrid/catalog/approval/requests/detail/" + getApprovalId();
             values.put("order_link", orderLink);
         }
         catch (UnsupportedEncodingException e) {
@@ -71,8 +70,8 @@ public class EmailBody implements Serializable {
         }
 
         try {
-            String date = ApprovalApiHelper.formatDate("dd MMM yyyy", request.getCreatedTime());
-            String time = ApprovalApiHelper.formatDate("HH:mm:ss", request.getCreatedTime());
+            String date = ApprovalApiHelper.formatDate("dd MMM yyyy", getCreatedTime());
+            String time = ApprovalApiHelper.formatDate("HH:mm:ss", getCreatedTime());
             values.put("order_date", date);
             values.put("order_time", time);
         } catch (Exception e1) {
@@ -84,21 +83,13 @@ public class EmailBody implements Serializable {
 
         System.out.println("request content params: " + params);
         values.put("params", getParamsTable(params));
-        values.put("approval_id", request.getId());
+        values.put("approval_id", getApprovalId());
 
         return values;
     }
 
     public String customizeKey(String key) {
         return StringUtils.capitalize(key.replace("_", " ").replaceAll("(?i)id", "ID"));
-    }
-
-    public Request getRequest() {
-        return this.request;
-    }
-
-    public void setRequest(Request request) {
-        this.request = request;
     }
 
     public Approver getApprover() {
@@ -117,19 +108,18 @@ public class EmailBody implements Serializable {
         this.group = group;
     }
 
-    public List<Stage> getStages() {
-        return this.stages;
+    public Request getRequest() {
+        return this.request;
     }
 
-    public void setStages(List<Stage> stages) {
-        this.stages = stages;
-    }
-
-    public EmailBody(Request request, Approver approver, Group group, List<Stage> stages) {
+    public void setRequest(Request request) {
         this.request = request;
+    }
+
+    public EmailBody(Approver approver, Group group, Request request) {
         this.approver = approver;
         this.group = group;
-        this.stages = stages;
+        this.request = request;
     }
 
     public String toString() {
@@ -139,7 +129,27 @@ public class EmailBody implements Serializable {
         StrSubstitutor sub = new StrSubstitutor(values);
         return sub.replace(template);
     }
+    
+    public Map<String, Object> getContent() {
+        return request.getContent();
+    }
+    
+    public String getIdentityFullName() {
+        return  request.getIdentityFullName().toString();
+    }
+    
+    public String getIdentityEmail() {
+        return  request.getIdentityEmail();
+    }
 
+    public String getApprovalId() {
+        return  request.getParentId();
+    }
+    
+    public String getCreatedTime() {
+        return  request.getCreatedTime();
+    }
+    
     private static String getUrlContent(URL url) throws Exception {
         URLConnection connection = url.openConnection();
         BufferedReader in = new BufferedReader(
