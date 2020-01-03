@@ -10,18 +10,18 @@ import java.util.LinkedHashMap;
 public class InputParserTest {
     private LinkedHashMap<String, Object> rawRequest;
     private List<LinkedHashMap<String, Object>> rawGroups;
-    private List<LinkedHashMap<String, Object>> rawStages;
+    private RequestPacket rawRequestPacket;
 
     @Before
     public void setUp() {
         rawRequest = TestResources.getRawRequest();
         rawGroups = TestResources.getRawGroups();
-        rawStages = TestResources.getRawStages();
+        rawRequestPacket = TestResources.getRawRequestPacket();
     }
 
     @Test
     public void testParseRequest() {
-        Request request = InputParser.parseRequest(rawRequest);
+        Request request = InputParser.parseRequest(rawRequest, rawRequestPacket);
 
         assertEquals(request.getRequester(), TestResources.REQUESTER);
         assertEquals(request.getName(), TestResources.REQUEST_NAME);
@@ -39,15 +39,5 @@ public class InputParserTest {
         assertEquals(groups.get(0).getApprovers().get(0).getEmailAddress(), TestResources.FIRST_EMAIL);
         assertEquals(groups.get(0).getApprovers().get(0).getFirstName(), TestResources.FIRST_FNAME);
         assertEquals(groups.get(0).getApprovers().get(0).getLastName(), TestResources.FIRST_LNAME);
-    }
-
-    @Test
-    public void testParseStages() {
-        List<Stage> stages = InputParser.parseStages(rawStages);
-
-        assertEquals(stages.size(), 1);
-        assertEquals(stages.get(0).getId(), TestResources.ID);
-        assertEquals(stages.get(0).getRandomAccessKey(), TestResources.RANDOM_ACCESS_KEY);
-        assertEquals(stages.get(0).getGroupRef(), TestResources.GROUP_REF);
     }
 }

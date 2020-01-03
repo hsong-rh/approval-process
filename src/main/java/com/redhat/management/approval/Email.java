@@ -44,8 +44,8 @@ public class Email implements Serializable {
         this.body = body;
     }
     
-    public void setBody(Request request, Approver approver, Group group, List<Stage> stages) {
-        EmailBody body = new EmailBody(request, approver, group, stages);
+    public void setBody(Approver approver, Group group, Request request) {
+        EmailBody body = new EmailBody(approver, group, request);
         this.body = body.toString();
     }
 

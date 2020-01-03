@@ -13,33 +13,21 @@ public class TestResources {
         return prepareRawGroups();
     }
 
-    public static ArrayList<LinkedHashMap<String, Object>> getRawStages() {
-        return prepareRawStages();
+    public static RequestPacket getRawRequestPacket() {
+        return prepareRawRequestPacket();
     }
 
     private static LinkedHashMap<String, Object> prepareRawRequest() {
-        HashMap<String, String> requestParams = new HashMap<String, String>();
-        requestParams.put("CPU", CPU_NUM);
-        requestParams.put("Disk", DISK_SIZE);
-
-        LinkedHashMap<String, Object> content = new LinkedHashMap<String, Object>();
-        content.put("product", PRODUCT);
-        content.put("params", requestParams);
-
-        LinkedHashMap<String, Object> context = new LinkedHashMap<String, Object>();
-        context.put("original_url", ORIGINAL_URL);
-        LinkedHashMap<String, Object> headers = new LinkedHashMap<String, Object>();
-        headers.put("x-rh-identity", ENCODED_USER);
-        context.put("headers", headers);
-
         LinkedHashMap<String, Object> rawRequest = new LinkedHashMap();
         rawRequest.put("name", REQUEST_NAME);
         rawRequest.put("requester_name", REQUESTER);
         rawRequest.put("id", ID);
+        rawRequest.put("parent_id", PARENT_ID);
+        rawRequest.put("random_access_key", RANDOM_ACCESS_KEY);
+        rawRequest.put("group_ref", GROUP_REF);
+        rawRequest.put("group_name", GROUP_NAME);
         rawRequest.put("tenant_id", TENANT_ID);
         rawRequest.put("created_at", CREATED_AT);
-        rawRequest.put("content", content);
-        rawRequest.put("context", context);
 
         return rawRequest;
     }
@@ -73,18 +61,26 @@ public class TestResources {
         return groups;
     }
 
-    private static ArrayList<LinkedHashMap<String, Object>> prepareRawStages() {
-        ArrayList<LinkedHashMap<String, Object>> stages = new ArrayList();
+    private static RequestPacket prepareRawRequestPacket() {
+        HashMap<String, String> requestParams = new HashMap<String, String>();
+        requestParams.put("CPU", CPU_NUM);
+        requestParams.put("Disk", DISK_SIZE);
 
-        LinkedHashMap<String, Object> stage = new LinkedHashMap<String, Object>();
-        stage.put("id", ID);
-        stage.put("random_access_key", RANDOM_ACCESS_KEY);
-        stage.put("created_at", CREATED_AT);
-        stage.put("group_ref", GROUP_REF);
+        LinkedHashMap<String, Object> content = new LinkedHashMap<String, Object>();
+        content.put("product", PRODUCT);
+        content.put("params", requestParams);
 
-        stages.add(stage);
+        LinkedHashMap<String, Object> context = new LinkedHashMap<String, Object>();
+        context.put("original_url", ORIGINAL_URL);
+        LinkedHashMap<String, Object> headers = new LinkedHashMap<String, Object>();
+        headers.put("x-rh-identity", ENCODED_USER);
+        context.put("headers", headers);
 
-        return stages;
+        HashMap<String, Object> packetMap = new HashMap<String, Object>();
+        packetMap.put("context", context);
+        packetMap.put("content", content);
+
+        return new RequestPacket(packetMap);
     }
 
     public static String CPU_NUM = "4";
@@ -94,6 +90,7 @@ public class TestResources {
     public static String REQUEST_NAME = "TESTING_REQUEST_NAME";
     public static String REQUESTER = "TESTING_REQUESTER";
     public static String ID = "TESTING_ID";
+    public static String PARENT_ID = "TESTING_PARENT_ID";
     public static String TENANT_ID = "TESTING_ID";
     public static String CREATED_AT = "2019-05-01T14:08:06.377Z";
     public static String ENCODED_USER = "eyJpZGVudGl0eSI6eyJhY2NvdW50X251bWJlciI6IjAzNjkyMzMiLCJ0eXBlIjoiVXNlciIsInVzZXIiOnsidXNlcm5hbWUiOiJqZG9lIiwiZW1haWwiOiJqZG9lQGFjbWUuY29tIiwiZmlyc3RfbmFtZSI6IkpvaG4iLCJsYXN0X25hbWUiOiJEb2UiLCJpc19hY3RpdmUiOnRydWUsImlzX29yZ19hZG1pbiI6ZmFsc2UsImlzX2ludGVybmFsIjpmYWxzZSwibG9jYWxlIjoiZW5fVVMifSwiaW50ZXJuYWwiOnsib3JnX2lkIjoiMzM0MDg1MSIsImF1dGhfdHlwZSI6ImJhc2ljLWF1dGgiLCJhdXRoX3RpbWUiOjYzMDB9fX0";

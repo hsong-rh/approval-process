@@ -21,38 +21,45 @@ public class Request implements Serializable {
 
     private String requester;
     private String name;
-    private Map<String, Object> content;
     private String createdTime;
     private String id;
+    private String parentId;
     private String tenantId;
-    private Map<String, Object> context;
+    private String randomAccessKey;
+    private String groupRef;
+    private String groupName;
+
+    private RequestPacket packet;
     private User user;
     
-    public Request(Map<String, Object> maps) {
+    public Request(Map<String, Object> maps, RequestPacket packet) {
+        this.packet = packet;
         this.requester = maps.get("requester_name").toString();
         this.id = maps.get("id").toString();
+        this.parentId = (maps.get("parent_id") == null) ? this.id : maps.get("parent_id").toString();
         this.tenantId = maps.get("tenant_id").toString();
         this.name = maps.get("name").toString();
         this.createdTime = maps.get("created_at").toString();
-        this.content = (LinkedHashMap<String, Object>) maps.get("content");
-        this.context = (LinkedHashMap<String, Object>) maps.get("context");
+        this.groupRef = maps.get("group_ref").toString();
+        this.randomAccessKey = maps.get("random_access_key").toString();
+        this.groupName = maps.get("group_name").toString();
         this.user = getRHIdentity().getUser();
     }
-
+    
     public Map<String, Object> getContent() {
-        return this.content;
+        return this.packet.getContent();
     }
 
     public void setContent(Map<String, Object> content) {
-        this.content = content;
+        this.packet.setContent(content);
     }
 
     public Map<String, Object> getContext() {
-        return this.context;
+        return this.packet.getContext();
     }
 
     public void setContext(Map<String, Object> context) {
-        this.context = context;
+        this.packet.setContext(context);
     }
 
     public String getRequester() {
@@ -70,16 +77,35 @@ public class Request implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+    
+    public RequestPacket getRequestPacket() {
+        return this.packet;
+    }
+    
+    public void setRequestPacket(RequestPacket packet) {
+        this.packet = packet;
+    }
+    
+    public String getRandomAccessKey() {
+        return this.randomAccessKey;
+    }
 
-    public Request() {
+    public void setRandomAccessKey(String randomAccessKey) {
+        this.randomAccessKey = randomAccessKey;
+    }
+
+    public String getGroupRef() {
+        return this.groupRef;
+    }
+
+    public void setGroupRef(String groupRef) {
+        this.groupRef = groupRef;
     }
 
     public String toString() {
         return "Request: " + "\n name: " + this.name
                 + "\n id: " + this.id
-                + "\n tenant id: " + this.tenantId
-                + "\n content: " + this.content
-                + "\n context: " + this.context;
+                + "\n tenant id: " + this.tenantId;
     }
 
     public String getCreatedTime() {
@@ -106,16 +132,16 @@ public class Request implements Serializable {
         this.tenantId = tenantId;
     }
 
-    public Request(String requester, String name, String createdTime, String id, String tenant_id) {
-        this.requester = requester;
-        this.name = name;
-        this.createdTime = createdTime;
-        this.id = id;
-        this.tenantId = tenantId;
+    public String getParentId() {
+        return this.parentId;
+    }
+
+    public void setParentId(String id) {
+        this.parentId = id;
     }
 
     public String getOriginalUrl() {
-        return this.context.get("original_url").toString();
+        return packet.getOriginalUrl();
     }
     
     public String getIdentityEmail() {
@@ -127,7 +153,7 @@ public class Request implements Serializable {
     }
     
     public RHIdentity getRHIdentity() {
-        return toRHIdentity(getEncodedIdentity());
+        return toRHIdentity(packet.getEncodedIdentity());
     }
 
     // Used by BPMN
@@ -184,11 +210,4 @@ public class Request implements Serializable {
         return id;
     }
 
-    private LinkedHashMap<String, Object> getHeaders() {
-        return (LinkedHashMap<String, Object>) this.context.get("headers");
-    }
-
-    private String getEncodedIdentity() {
-        return getHeaders().get("x-rh-identity").toString();
-    }
 }

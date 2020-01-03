@@ -57,26 +57,17 @@ public class ApprovalApiHelper implements java.io.Serializable {
     }
 
     // Used in bpmn
-    public static Stage findStageByGroup(Group group, List<Stage> stages) {
-        for (Stage stage : stages) {
-            if (stage.getGroupRef().equals(group.getUuid()))
-                return stage;
-        }
-        return null; //TODO Exception handler
+    public static String getRequestContent(String decision) {
+        return isRequestSkippable(decision) ? SKIP : NOTIFY;
     }
 
     // Used in bpmn
-    public static String getStageContent(String decision) {
-        return isStageSkippable(decision) ? SKIP : NOTIFY;
-    }
-
-    // Used in bpmn
-    public static String getStageUrl(Stage stage) {
+    public static String getRequestUrl(Request request) {
         String apiUrl = System.getenv("APPROVAL_API_URL");
-        return apiUrl + "/api/approval/v1.0/stages/"+ stage.getId() +"/actions";
+        return apiUrl + "/api/approval/v1.0/requests/"+ request.getId() +"/actions";
     }
 
-    public static boolean isStageSkippable(String action) {
+    public static boolean isRequestSkippable(String action) {
         return (action.equals("denied") || action.equals("canceled"));
     }
 }

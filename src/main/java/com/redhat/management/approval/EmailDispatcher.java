@@ -24,10 +24,10 @@ public class EmailDispatcher implements Serializable {
         this.body = body;
     }
     
-    public EmailDispatcher(List<Approver> approvers, Group group, List<Stage> stages, Request request) {
+    public EmailDispatcher(List<Approver> approvers, Group group, Request request) {
         setHeaders(defaultHeaders());
         setUrl(defaultUrl());
-        setBody(approvers, group, stages, request);
+        setBody(approvers, group, request);
     }
 
     public void setHeaders(String headers) {
@@ -70,7 +70,10 @@ public class EmailDispatcher implements Serializable {
     }
 
     // Used in bpmn
-    public void setBody(List<Approver> approvers, Group group, List<Stage> stages, Request request) {
+    public void setBody(List<Approver> approvers, Group group, Request request) {
+        String request_id = request.getParentId();
+        String request_name = request.getName();
+        
         ArrayList<Email> emails = new ArrayList<Email>();
         for (Approver approver : approvers) {
             String name = approver.getFirstName() + " " + approver.getLastName();
@@ -78,8 +81,8 @@ public class EmailDispatcher implements Serializable {
             ArrayList<String> recipients = new ArrayList<String>();
             recipients.add(recipient.toString());
             Email email = new Email(recipients);
-            email.setSubject(request.getId(), request.getName());
-            email.setBody(request, approver, group, stages);
+            email.setSubject(request_id, request_name);
+            email.setBody(approver, group, request);
             emails.add(email);
         }
 

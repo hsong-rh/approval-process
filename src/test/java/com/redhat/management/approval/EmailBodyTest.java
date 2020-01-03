@@ -12,23 +12,21 @@ import java.util.LinkedHashMap;
 public class EmailBodyTest {
     private LinkedHashMap<String, Object> rawRequest;
     private ArrayList<LinkedHashMap<String, Object>> rawGroups;
-    private ArrayList<LinkedHashMap<String, Object>> rawStages;
+    private RequestPacket rawRequestPacket;
 
     @Before
     public void setUp() {
         rawRequest = TestResources.getRawRequest();
         rawGroups = TestResources.getRawGroups();
-        rawStages = TestResources.getRawStages();
+        rawRequestPacket = TestResources.getRawRequestPacket();
     }
 
     @Test
     public void testGetEmailTemplate() {
-      Request request = InputParser.parseRequest(rawRequest);
-      List<Stage> stages = InputParser.parseStages(rawStages);
+      Request request = InputParser.parseRequest(rawRequest, rawRequestPacket);
       List<Group> groups = InputParser.parseGroups(rawGroups);
       List<Approver> approvers = groups.get(0).getApprovers();
-      EmailBody body = new EmailBody(request, 
-          approvers.get(0), groups.get(0), stages);
+      EmailBody body = new EmailBody(approvers.get(0), groups.get(0), request);
 
       String template = body.getEmailTemplate();
 
@@ -38,12 +36,10 @@ public class EmailBodyTest {
 
     @Test
     public void testGetRequestParameters() {
-      Request request = InputParser.parseRequest(rawRequest);
-      List<Stage> stages = InputParser.parseStages(rawStages);
+      Request request = InputParser.parseRequest(rawRequest, rawRequestPacket);
       List<Group> groups = InputParser.parseGroups(rawGroups);
       List<Approver> approvers = groups.get(0).getApprovers();
-      EmailBody body = new EmailBody(request, 
-          approvers.get(0), groups.get(0), stages);
+      EmailBody body = new EmailBody(approvers.get(0), groups.get(0), request);
 
       Map<String, String> params = body.getRequestParameters();
 
@@ -53,12 +49,10 @@ public class EmailBodyTest {
 
     @Test
     public void testCustomizeKey() {
-      Request request = InputParser.parseRequest(rawRequest);
-      List<Stage> stages = InputParser.parseStages(rawStages);
+      Request request = InputParser.parseRequest(rawRequest, rawRequestPacket);
       List<Group> groups = InputParser.parseGroups(rawGroups);
       List<Approver> approvers = groups.get(0).getApprovers();
-      EmailBody body = new EmailBody(request, 
-          approvers.get(0), groups.get(0), stages);
+      EmailBody body = new EmailBody(approvers.get(0), groups.get(0), request);
 
       assertEquals(body.customizeKey("order_id"), "Order ID");
       assertEquals(body.customizeKey("order_Id"), "Order ID");

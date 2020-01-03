@@ -24,8 +24,8 @@ public class InputParser implements Serializable {
 
     static final long serialVersionUID = 1L;
 
-    public static Request parseRequest(Map<String, Object> requestMaps) {
-        return new Request(requestMaps);
+    public static RequestPacket parseRequestPacket(Map<String, Object> requestPacket) {
+        return new RequestPacket(requestPacket);
     }
 
     /*
@@ -51,17 +51,7 @@ public class InputParser implements Serializable {
         return groups;
     }
 
-    public static List<Stage> parseStages(List<LinkedHashMap<String, Object>> rawStages) {
-
-        List<Stage> stages = new ArrayList<Stage>();
-        for (LinkedHashMap<String, Object> rawStage : rawStages) {
-            Stage stage = new Stage(rawStage.get("id").toString(), 
-                                    rawStage.get("random_access_key").toString(), 
-                                    rawStage.get("created_at").toString(),
-                                    rawStage.get("group_ref").toString());
-            stages.add(stage);
-        }
-
-        return stages;
+    public static Request parseRequest(Map<String, Object> rawRequest, RequestPacket packet) {
+        return new Request(rawRequest, packet);
     }
 }
