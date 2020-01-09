@@ -160,7 +160,6 @@ public class Request implements Serializable {
     public String createSysadminIdentity() {
         RHIdentity rhid = getRHIdentity();
 
-        rhid.getUser().setUsername("sysadmin");
         rhid.getUser().setEmail("sysadmin");
         rhid.getUser().setFirst_name("sysadmin");
         rhid.getUser().setLast_name("sysadmin");
