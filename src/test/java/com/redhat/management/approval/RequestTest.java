@@ -29,12 +29,12 @@ public class RequestTest {
     }
 
     @Test
-    public void testCreateSysadminIdentity() {
+    public void testGetPostActionHeaders() {
         Request request = new Request(rawRequest, rawRequestPacket);
-        String sysadmin = request.createSysadminIdentity();
+        String headers = request.getPostActionHeaders();
 
-        assertNotNull(sysadmin);
-        assertEquals(sysadmin, TestResources.ENCODED_SYSADMIN);
+        assertNotNull(headers);
+        assertEquals(headers, "x-rh-identity="+TestResources.ENCODED_SYSADMIN+";x-rh-random-access-key="+TestResources.RANDOM_ACCESS_KEY);
     }
 }
 

@@ -339,10 +339,10 @@ Request request = (Request) kcontext.getVariable("request");
 String decision = (signalContent == null) ? "undecided" : (String)signalContent.get("decision");
 String content = ApprovalApiHelper.getRequestContent(decision);
 
-String id = request.createSysadminIdentity();
+String headers = request.getPostActionHeaders();
 
 kcontext.setVariable("stageUrl", ApprovalApiHelper.getRequestUrl(request));
-kcontext.setVariable("identityHeaders", id);
+kcontext.setVariable("identityHeaders", headers);
 kcontext.setVariable("stageContent", content);
 
 System.out.println(request);
