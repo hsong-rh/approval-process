@@ -157,14 +157,15 @@ public class Request implements Serializable {
     }
 
     // Used by BPMN
-    public String createSysadminIdentity() {
+    public String getPostActionHeaders() {
         RHIdentity rhid = getRHIdentity();
 
         rhid.getUser().setEmail("sysadmin");
         rhid.getUser().setFirst_name("sysadmin");
         rhid.getUser().setLast_name("sysadmin");
-        String id = "x-rh-identity=" + createEncodedIdentity(rhid);
-        return id;
+        String headers = "x-rh-identity=" + createEncodedIdentity(rhid);
+        headers += ";x-rh-random-access-key=" +  getRandomAccessKey();
+        return headers;
     }
 
     private String createEncodedIdentity(RHIdentity id) {
