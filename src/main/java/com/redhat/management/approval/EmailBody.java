@@ -58,7 +58,7 @@ public class EmailBody implements Serializable {
             String approveLink = webUrl + "/api/approval/v1.0/stageaction/" + request.getRandomAccessKey() + "?approver=" + encoded_user;
             values.put("approve_link", approveLink);
 
-            String orderLink = webUrl + "/hybrid/catalog/approval/requests/detail/" + getApprovalId();
+            String orderLink = webUrl + "/ansible/catalog/approval/requests/detail/" + getApprovalId();
             values.put("order_link", orderLink);
         }
         catch (UnsupportedEncodingException e) {
