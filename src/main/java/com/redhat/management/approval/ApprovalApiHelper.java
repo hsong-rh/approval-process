@@ -23,6 +23,11 @@ public class ApprovalApiHelper implements java.io.Serializable {
     private final static String SKIP = "{\"operation\": \"skip\", \"processed_by\": \"system\"}";
     private final static String NOTIFY = "{\"operation\": \"notify\", \"processed_by\": \"system\"}";
 
+    public final static int SUCCEEDED = 0;
+    public final static int PARSE_REQUEST_ERROR = 1;
+    public final static int PARSE_GROUP_ERROR = 2;
+    public final static int PARSE_EMAIL_ERROR = 3;
+    public final static int PARSE_HEADER_URL_ERROR = 4;
 
     public static String formatDate(String pattern, String timeStr) throws Exception {
         DateFormat df = new SimpleDateFormat(pattern);
@@ -59,6 +64,10 @@ public class ApprovalApiHelper implements java.io.Serializable {
     // Used in bpmn
     public static String getRequestContent(String decision) {
         return isRequestSkippable(decision) ? SKIP : NOTIFY;
+    }
+    
+    public static String getRequestErrorContent(String reason) {
+        return "{\"operation\": \"error\", \"processed_by\": \"system\", \"comments\": \"" + reason + "\"}";
     }
 
     // Used in bpmn
