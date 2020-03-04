@@ -1,8 +1,6 @@
 package com.redhat.management.approval;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Base64;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -19,6 +17,7 @@ public class Request implements Serializable {
 
     static final long serialVersionUID = 1L;
 
+    private static final String SYSADMIN = "sysadmin";
     private String requester;
     private String name;
     private String createdTime;
@@ -160,26 +159,25 @@ public class Request implements Serializable {
     public String getPostActionHeaders() {
         RHIdentity rhid = getRHIdentity();
 
-        rhid.getUser().setEmail("sysadmin");
-        rhid.getUser().setFirst_name("sysadmin");
-        rhid.getUser().setLast_name("sysadmin");
+        rhid.getUser().setEmail(SYSADMIN);
+        rhid.getUser().setFirst_name(SYSADMIN);
+        rhid.getUser().setLast_name(SYSADMIN);
         String headers = "x-rh-identity=" + createEncodedIdentity(rhid);
         headers += ";x-rh-random-access-key=" +  getRandomAccessKey();
         return headers;
     }
 
     private String createEncodedIdentity(RHIdentity id) {
-        ObjectMapper Obj = new ObjectMapper();
-        Obj.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper obj = new ObjectMapper();
+        obj.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String encoded = "";
 
         try {
-            String jsonStr = Obj.writeValueAsString(id);
+            String jsonStr = obj.writeValueAsString(id);
             byte[] bytes = jsonStr.getBytes("UTF-8");
             encoded = Base64.getEncoder().encodeToString(bytes);
         }
         catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch (IOException e) {
@@ -194,20 +192,20 @@ public class Request implements Serializable {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        RHIdentity id = new RHIdentity();
+        RHIdentity rhid = new RHIdentity();
 
         try {
             byte[] decodedBytes = Base64.getDecoder().decode(encodedContext);
             String jsonStr = new String(decodedBytes);
             System.out.println("Decoded identity: " + jsonStr);
-            id = mapper.readValue(jsonStr, RHIdentity.class);
-            System.out.println("getIdentity: " + id);
+            rhid = mapper.readValue(jsonStr, RHIdentity.class);
+            System.out.println("getIdentity: " + rhid);
         } catch (IOException e) {
               // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        return id;
+        return rhid;
     }
 
 }

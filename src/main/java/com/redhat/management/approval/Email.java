@@ -1,6 +1,5 @@
 package com.redhat.management.approval;
 import java.util.List;
-import java.util.ArrayList;
 import java.io.Serializable;
 
 /**
@@ -45,8 +44,8 @@ public class Email implements Serializable {
     }
     
     public void setBody(Approver approver, Group group, Request request) {
-        EmailBody body = new EmailBody(approver, group, request);
-        this.body = body.toString();
+        EmailBody emailBody = new EmailBody(approver, group, request);
+        this.body = emailBody.toString();
     }
 
 

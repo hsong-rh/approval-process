@@ -7,11 +7,8 @@ import java.io.Serializable;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.ArrayList;
 import java.net.URL;
 import java.net.URLConnection;
 import org.apache.commons.lang3.text.StrSubstitutor;
@@ -25,6 +22,7 @@ public class EmailBody implements Serializable {
 
     static final long serialVersionUID = 1L;
     private static String templateFile = "EmailTemplate.html";
+    private static final String PARAMS_KEY = "params"; 
 
     private Approver approver;
     private Group group;
@@ -43,26 +41,25 @@ public class EmailBody implements Serializable {
     }
 
     public Map<String, String> getRequestParameters() {
-        Map<String, Object> request_content = getContent();
+        Map<String, Object> requestContent = getContent();
 
         Map<String, String> values = new HashMap<String, String>();
         values.put("approver_name", approver.getFirstName() + " " + approver.getLastName());
         values.put("requester_name", getIdentityFullName());
         values.put("orderer_email", getIdentityEmail());
-        values.put("contents", getRequestContentLines(request_content));
+        values.put("contents", getRequestContentLines(requestContent));
 
         String webUrl = System.getenv("APPROVAL_WEB_URL");
         try {
             byte[] bytes = approver.getUserName().getBytes("UTF-8");
-            String encoded_user = Base64.getEncoder().encodeToString(bytes);
-            String approveLink = webUrl + "/api/approval/v1.0/stageaction/" + request.getRandomAccessKey() + "?approver=" + encoded_user;
+            String encodedUser = Base64.getEncoder().encodeToString(bytes);
+            String approveLink = webUrl + "/api/approval/v1.0/stageaction/" + request.getRandomAccessKey() + "?approver=" + encodedUser;
             values.put("approve_link", approveLink);
 
             String orderLink = webUrl + "/ansible/catalog/approval/requests/detail/" + getApprovalId();
             values.put("order_link", orderLink);
         }
         catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch (IOException e) {
@@ -75,21 +72,20 @@ public class EmailBody implements Serializable {
             values.put("order_date", date);
             values.put("order_time", time);
         } catch (Exception e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
-        HashMap<String, Object> params = (HashMap<String, Object>) request_content.get("params");
+        HashMap<String, Object> params = (HashMap<String, Object>) requestContent.get(PARAMS_KEY);
 
         System.out.println("request content params: " + params);
-        values.put("params", getParamsTable(params));
+        values.put(PARAMS_KEY, getParamsTable(params));
         values.put("approval_id", getApprovalId());
 
         return values;
     }
 
     public String customizeKey(String key) {
-        return StringUtils.capitalize(key.replace("_", " ").replaceAll("(?i)id", "ID"));
+        return StringUtils.capitalize(key.replace("_", " ").replaceAll("id", "ID").replaceAll("Id", "ID"));
     }
 
     public Approver getApprover() {
@@ -150,7 +146,7 @@ public class EmailBody implements Serializable {
         return  request.getCreatedTime();
     }
     
-    private static String getUrlContent(URL url) throws Exception {
+    private static String getUrlContent(URL url) throws IOException {
         URLConnection connection = url.openConnection();
         BufferedReader in = new BufferedReader(
                               new InputStreamReader(
@@ -173,7 +169,7 @@ public class EmailBody implements Serializable {
     private String getRequestContentLines(Map<String, Object> contents) {
         StringBuilder lines = new StringBuilder();
         for (HashMap.Entry<String, Object> entry : contents.entrySet()) {
-            if (entry.getKey().equals("params"))
+            if (entry.getKey().equals(PARAMS_KEY))
                 continue;
   
             String line = "<strong>" + customizeKey(entry.getKey()) + ":</strong>" + entry.getValue().toString() + "<br>";
@@ -194,5 +190,4 @@ public class EmailBody implements Serializable {
         paramsTable.append("</tbody></table>");
         return paramsTable.toString();
     }
-
 }
