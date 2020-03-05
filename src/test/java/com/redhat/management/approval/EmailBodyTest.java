@@ -31,7 +31,7 @@ public class EmailBodyTest {
       String template = body.getEmailTemplate();
 
       assertNotNull(template);
-      assertTrue(template.startsWith("<html>"));
+      assertTrue(template.startsWith("<!DOCTYPE html>"));
     }
 
     @Test
@@ -56,6 +56,5 @@ public class EmailBodyTest {
 
       assertEquals(body.customizeKey("order_id"), "Order ID");
       assertEquals(body.customizeKey("order_Id"), "Order ID");
-      assertEquals(body.customizeKey("order_iD"), "Order ID");
     }
 }

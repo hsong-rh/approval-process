@@ -56,23 +56,23 @@ public class EmailDispatcher implements Serializable {
         String token = System.getenv("BACKOFFICE_TOKEN").replace("=", "");
         String clientEnv = System.getenv("BACKOFFICE_CLIENT_ENV");
         
-        StringBuilder headers = new StringBuilder();
-        headers.append("x-rh-clientid=");
-        headers.append(clientId);
-        headers.append(";x-rh-apitoken=");
-        headers.append(token);
+        StringBuilder headersBuilder = new StringBuilder();
+        headersBuilder.append("x-rh-clientid=");
+        headersBuilder.append(clientId);
+        headersBuilder.append(";x-rh-apitoken=");
+        headersBuilder.append(token);
         if (clientEnv != null) {
-            headers.append(";x-rh-insights-env=");
-            headers.append(clientEnv);
+            headersBuilder.append(";x-rh-insights-env=");
+            headersBuilder.append(clientEnv);
         }
         
-        return headers.toString();
+        return headersBuilder.toString();
     }
 
     // Used in bpmn
     public void setBody(List<Approver> approvers, Group group, Request request) {
-        String request_id = request.getParentId();
-        String request_name = request.getName();
+        String requestId = request.getParentId();
+        String requestName = request.getName();
         
         ArrayList<Email> emails = new ArrayList<Email>();
         for (Approver approver : approvers) {
@@ -81,7 +81,7 @@ public class EmailDispatcher implements Serializable {
             ArrayList<String> recipients = new ArrayList<String>();
             recipients.add(recipient.toString());
             Email email = new Email(recipients);
-            email.setSubject(request_id, request_name);
+            email.setSubject(requestId, requestName);
             email.setBody(approver, group, request);
             emails.add(email);
         }

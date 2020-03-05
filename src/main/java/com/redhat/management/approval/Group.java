@@ -35,13 +35,17 @@ public class Group implements Serializable {
     }
 
     public String toString() {
-        String groupStr = "Group: " + "\n name: " + this.name
-                + "\n ref: " + this.uuid;
+        StringBuilder groupStr = new StringBuilder("Group: \n");
+        
+        groupStr.append(" name: "); 
+        groupStr.append(this.name);
+        groupStr.append("\n ref: ");
+        groupStr.append(this.uuid);
 
         for (Approver approver : approvers) {
-            groupStr = groupStr + approver;
+            groupStr.append(approver);
         }
-        return groupStr;
+        return groupStr.toString();
     }
 
     public String getUuid() {
