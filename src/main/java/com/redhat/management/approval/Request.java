@@ -24,7 +24,6 @@ public class Request implements Serializable {
     private String id;
     private String parentId;
     private String tenantId;
-    private String randomAccessKey;
     private String groupRef;
     private String groupName;
 
@@ -40,7 +39,6 @@ public class Request implements Serializable {
         this.name = maps.get("name").toString();
         this.createdTime = maps.get("created_at").toString();
         this.groupRef = maps.get("group_ref").toString();
-        this.randomAccessKey = maps.get("random_access_key").toString();
         this.groupName = maps.get("group_name").toString();
         this.user = getRHIdentity().getUser();
     }
@@ -84,14 +82,6 @@ public class Request implements Serializable {
     public void setRequestPacket(RequestPacket packet) {
         this.packet = packet;
     }
-    
-    public String getRandomAccessKey() {
-        return this.randomAccessKey;
-    }
-
-    public void setRandomAccessKey(String randomAccessKey) {
-        this.randomAccessKey = randomAccessKey;
-    }
 
     public String getGroupRef() {
         return this.groupRef;
@@ -102,9 +92,12 @@ public class Request implements Serializable {
     }
 
     public String toString() {
-        return "Request: " + "\n name: " + this.name
-                + "\n id: " + this.id
-                + "\n tenant id: " + this.tenantId;
+        StringBuilder sb = new StringBuilder("Request:  \n name: ");
+        sb.append(this.name +  "\n id: ");
+        sb.append(this.id + "\n tenant id: ");
+        sb.append(this.tenantId + "\n");
+        sb.append(this.user);
+        return sb.toString();
     }
 
     public String getCreatedTime() {
@@ -162,9 +155,7 @@ public class Request implements Serializable {
         rhid.getUser().setEmail(SYSADMIN);
         rhid.getUser().setFirst_name(SYSADMIN);
         rhid.getUser().setLast_name(SYSADMIN);
-        String headers = "x-rh-identity=" + createEncodedIdentity(rhid);
-        headers += ";x-rh-random-access-key=" +  getRandomAccessKey();
-        return headers;
+        return "x-rh-identity=" + createEncodedIdentity(rhid);
     }
 
     private String createEncodedIdentity(RHIdentity id) {
@@ -188,8 +179,6 @@ public class Request implements Serializable {
     }  
 
     private RHIdentity toRHIdentity(String encodedContext) {
-        System.out.println("getIdentity: encoded context = " + encodedContext);
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         RHIdentity rhid = new RHIdentity();
@@ -197,9 +186,7 @@ public class Request implements Serializable {
         try {
             byte[] decodedBytes = Base64.getDecoder().decode(encodedContext);
             String jsonStr = new String(decodedBytes);
-            System.out.println("Decoded identity: " + jsonStr);
             rhid = mapper.readValue(jsonStr, RHIdentity.class);
-            System.out.println("getIdentity: " + rhid);
         } catch (IOException e) {
               // TODO Auto-generated catch block
             e.printStackTrace();

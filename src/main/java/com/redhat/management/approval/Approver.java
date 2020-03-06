@@ -15,6 +15,7 @@ public class Approver implements Serializable {
     private String lastName;
     private String userName;
     private String emailAddress;
+    private String randomAccessKey;
 
     public Approver() {
     }
@@ -58,20 +59,38 @@ public class Approver implements Serializable {
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
+    
+    public String getRandomAccessKey() {
+        return this.randomAccessKey;
+    }
+    
+    public void setRandomAccessKey(String randomAccessKey) {
+        this.randomAccessKey = randomAccessKey;
+    }
 
-    public Approver(String userName, String emailAddress, String firstName, String lastName) {
+    public Approver(String userName, String emailAddress, String firstName, String lastName, String randomAccessKey) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
         this.emailAddress = emailAddress;
+        this.randomAccessKey = randomAccessKey;
     }
     
     public String toString() {
-        return "Approver: " +
-        "\n firstName: " + this.firstName +
-        "\n lastName: " + this.lastName +
-        "\n userName: " + this.userName +
-        "\n emailAddress: " + this.emailAddress;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Approver: ");
+        sb.append("\n firstName: ");
+        sb.append(this.firstName);
+        sb.append("\n lastName: ");
+        sb.append(this.lastName);
+        sb.append("\n userName: ");
+        sb.append( this.userName);
+        sb.append("\n emailAddress: ");
+        sb.append( this.emailAddress);
+        sb.append("\n randomAccessKey: ");
+        sb.append(this.randomAccessKey);
+
+        return sb.toString();
     }
 
 }
