@@ -1,8 +1,6 @@
 package com.redhat.management.approval;
 
-import java.util.Base64;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.Serializable;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -50,21 +48,11 @@ public class EmailBody implements Serializable {
         values.put("contents", getRequestContentLines(requestContent));
 
         String webUrl = System.getenv("APPROVAL_WEB_URL");
-        try {
-            byte[] bytes = approver.getUserName().getBytes("UTF-8");
-            String encodedUser = Base64.getEncoder().encodeToString(bytes);
-            String approveLink = webUrl + "/api/approval/v1.0/stageaction/" + request.getRandomAccessKey() + "?approver=" + encodedUser;
-            values.put("approve_link", approveLink);
+        String approveLink = webUrl + "/api/approval/v1.0/stageaction/" + approver.getRandomAccessKey();
+        values.put("approve_link", approveLink);
 
-            String orderLink = webUrl + "/ansible/catalog/approval/requests/detail/" + getApprovalId();
-            values.put("order_link", orderLink);
-        }
-        catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace(); 
-        }
+        String orderLink = webUrl + "/ansible/catalog/approval/requests/detail/" + getApprovalId();
+        values.put("order_link", orderLink);
 
         try {
             String date = ApprovalApiHelper.formatDate("dd MMM yyyy", getCreatedTime());

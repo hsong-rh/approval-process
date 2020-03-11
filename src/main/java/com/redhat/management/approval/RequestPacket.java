@@ -11,8 +11,8 @@ public class RequestPacket implements java.io.Serializable {
 
     static final long serialVersionUID = 1L;
     
-    private transient Map<String, Object> content;
-    private transient Map<String, Object> context;
+    private Map<String, Object> content;
+    private Map<String, Object> context;
 
     public RequestPacket(Map<String, Object> maps) {
         this.context = (LinkedHashMap<String, Object>) maps.get("context");
@@ -36,8 +36,10 @@ public class RequestPacket implements java.io.Serializable {
     }
 
     public String toString() {
-        return "Request context: \n" + this.context
-            + "\nRequest content: \n" + this.content;
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n  Request context: \n   " + this.context);
+        sb.append("\n  Request content: \n   " + this.content);
+        return sb.toString();
     }
     
     public Map<String, Object> getHeaders() {

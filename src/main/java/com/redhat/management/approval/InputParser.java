@@ -31,7 +31,7 @@ public class InputParser implements Serializable {
             ArrayList<Approver> approvers = new ArrayList<Approver>();
 
             for (LinkedHashMap<String, String> rawApprover : rawApprovers) {
-                Approver approver = new Approver(rawApprover.get("username"), rawApprover.get("email"), rawApprover.get("first_name"), rawApprover.get("last_name"));
+                Approver approver = new Approver(rawApprover.get("username"), rawApprover.get("email"), rawApprover.get("first_name"), rawApprover.get("last_name"), rawApprover.get("random_access_key"));
                 approvers.add(approver);
             }
 

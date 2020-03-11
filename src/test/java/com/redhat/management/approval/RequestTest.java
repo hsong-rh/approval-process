@@ -34,7 +34,7 @@ public class RequestTest {
         String headers = request.getPostActionHeaders();
 
         assertNotNull(headers);
-        assertEquals(headers, "x-rh-identity="+TestResources.ENCODED_SYSADMIN+";x-rh-random-access-key="+TestResources.RANDOM_ACCESS_KEY);
+        assertEquals(headers, "x-rh-identity="+TestResources.ENCODED_SYSADMIN);
     }
 }
 
