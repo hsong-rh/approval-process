@@ -48,10 +48,15 @@ public class EmailBody implements Serializable {
         values.put("contents", getRequestContentLines(requestContent));
 
         String webUrl = System.getenv("APPROVAL_WEB_URL");
-        String approveLink = webUrl + "/api/approval/v1.0/stageaction/" + approver.getRandomAccessKey();
+        // base path: /api/approval/v1.1
+        String basePath = System.getenv("APPROVAL_API_BASE_PATH");
+        // catalog base path: /ansible/catalog/approval/requests/detail/
+        String uiPath = System.getenv("APPROVAL_UI_PATH");
+
+        String approveLink = webUrl + basePath +"/stageaction/" + approver.getRandomAccessKey();
         values.put("approve_link", approveLink);
 
-        String orderLink = webUrl + "/ansible/catalog/approval/requests/detail/" + getApprovalId();
+        String orderLink = webUrl + uiPath + getApprovalId();
         values.put("order_link", orderLink);
 
         try {

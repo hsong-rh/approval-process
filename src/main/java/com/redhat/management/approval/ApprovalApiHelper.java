@@ -69,7 +69,9 @@ public class ApprovalApiHelper implements java.io.Serializable {
     // Used in bpmn
     public static String getRequestUrl(Request request) {
         String apiUrl = System.getenv("APPROVAL_API_URL");
-        return apiUrl + "/api/approval/v1.0/requests/"+ request.getId() +"/actions";
+        String basePath = System.getenv("APPROVAL_API_BASE_PATH");
+
+        return apiUrl + basePath +"/requests/"+ request.getId() +"/actions";
     }
 
     public static boolean isRequestSkippable(String action) {
