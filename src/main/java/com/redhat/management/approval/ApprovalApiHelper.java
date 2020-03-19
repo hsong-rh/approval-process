@@ -25,6 +25,8 @@ public class ApprovalApiHelper implements java.io.Serializable {
     public static final int PARSE_EMAIL_ERROR = 3;
     public static final int PARSE_HEADER_URL_ERROR = 4;
 
+    public static final String APPROVAL_API_BASE_PATH = "/api/approval/v1.1";
+
     public static String formatDate(String pattern, String timeStr) {
         DateFormat df = new SimpleDateFormat(pattern);
         return df.format(getDate(timeStr));
@@ -63,15 +65,14 @@ public class ApprovalApiHelper implements java.io.Serializable {
     }
     
     public static String getRequestErrorContent(String reason) {
-        return "{\"operation\": \"error\", \"processed_by\": \"system\", \"comments\": \"" + reason + "\"}";
+        return String.format("{\"operation\": \"error\", \"processed_by\": \"system\", \"comments\": \"%s\"}", reason);
     }
 
     // Used in bpmn
     public static String getRequestUrl(Request request) {
         String apiUrl = System.getenv("APPROVAL_API_URL");
-        String basePath = System.getenv("APPROVAL_API_BASE_PATH");
 
-        return apiUrl + basePath +"/requests/"+ request.getId() +"/actions";
+        return String.format("%s%s/requests/%s/actions", apiUrl, APPROVAL_API_BASE_PATH, request.getId());
     }
 
     public static boolean isRequestSkippable(String action) {
