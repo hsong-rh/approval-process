@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 public class EmailBody implements Serializable {
 
     static final long serialVersionUID = 1L;
-    private static String templateFile = "EmailTemplate.html";
+    private static String templateFile = "AnsibleCatalogEmailTemplate.html";
     private static final String PARAMS_KEY = "params"; 
 
     private Approver approver;
@@ -48,11 +48,11 @@ public class EmailBody implements Serializable {
         values.put("contents", getRequestContentLines(requestContent));
 
         String webUrl = System.getenv("APPROVAL_WEB_URL");
-        String approveLink = webUrl + "/api/approval/v1.0/stageaction/" + approver.getRandomAccessKey();
+        String approveLink = String.format("%s%s/stageaction/%s", webUrl,
+            ApprovalApiHelper.APPROVAL_API_BASE_PATH, approver.getRandomAccessKey());
         values.put("approve_link", approveLink);
-
-        String orderLink = webUrl + "/ansible/catalog/approval/requests/detail/" + getApprovalId();
-        values.put("order_link", orderLink);
+        values.put("web_url", webUrl);
+        values.put("approval_id", getApprovalId());
 
         try {
             String date = ApprovalApiHelper.formatDate("dd MMM yyyy", getCreatedTime());
