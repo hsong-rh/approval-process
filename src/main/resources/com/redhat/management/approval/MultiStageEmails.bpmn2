@@ -71,16 +71,16 @@
         </bpmn2:extensionElements>
         <bpmn2:incoming>_BB980627-76A5-4C4C-86F5-E97DE57232C1</bpmn2:incoming>
         <bpmn2:outgoing>_AEA570EB-7FED-430F-9321-A50FAA89D8B8</bpmn2:outgoing>
-        <bpmn2:script><![CDATA[System.out.println("Process request now ....");
+        <bpmn2:script><![CDATA[Logger.getLogger().info("Process request now ....");
 
 // Suppose everything should retrieve from kcontext variable [request]
 RequestPacket requestPacket = InputParser.parseRequestPacket((java.util.LinkedHashMap<String, Object>) kcontext.getVariable("request_context"));
 Request request = InputParser.parseRequest((java.util.LinkedHashMap<String, Object>)kcontext.getVariable("request"), requestPacket);
 java.util.List<Group> groups = InputParser.parseGroups((java.util.ArrayList<java.util.LinkedHashMap<String, Object>>)kcontext.getVariable("groups"));
 
-System.out.println("Request packet: " + requestPacket);
-System.out.println(request);
-System.out.println("Groups: " + groups);
+Logger.getLogger().info("Request packet: " + requestPacket);
+Logger.getLogger().info(request.toString());
+Logger.getLogger().info("Groups: " + groups);
     
 kcontext.setVariable("stageUrl", ApprovalApiHelper.getRequestUrl(request));
 kcontext.setVariable("request", request); 
