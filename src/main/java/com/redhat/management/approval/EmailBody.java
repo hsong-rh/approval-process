@@ -30,10 +30,11 @@ public class EmailBody implements Serializable {
         URL url = EmailBody.class.getResource(templateFile);
 
         String content = "";
+        Logger log = Logger.getLogger(request.getInsightsRequestId());
         try {
             content = getUrlContent(url);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return content;
     }
@@ -54,18 +55,18 @@ public class EmailBody implements Serializable {
         values.put("web_url", webUrl);
         values.put("approval_id", getApprovalId());
 
+        Logger log = Logger.getLogger(request.getInsightsRequestId());
         try {
             String date = ApprovalApiHelper.formatDate("dd MMM yyyy", getCreatedTime());
             String time = ApprovalApiHelper.formatDate("HH:mm:ss", getCreatedTime());
             values.put("order_date", date);
             values.put("order_time", time);
-        } catch (Exception e1) {
-            e1.printStackTrace();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
 
         HashMap<String, Object> params = (HashMap<String, Object>) requestContent.get(PARAMS_KEY);
 
-        System.out.println("request content params: " + params);
         values.put(PARAMS_KEY, getParamsTable(params));
         values.put("approval_id", getApprovalId());
 
@@ -156,6 +157,7 @@ public class EmailBody implements Serializable {
 
     private String getRequestContentLines(Map<String, Object> contents) {
         StringBuilder lines = new StringBuilder();
+
         for (HashMap.Entry<String, Object> entry : contents.entrySet()) {
             if (entry.getKey().equals(PARAMS_KEY))
                 continue;
@@ -163,7 +165,6 @@ public class EmailBody implements Serializable {
             String line = "<strong>" + customizeKey(entry.getKey()) + ":</strong>" + entry.getValue().toString() + "<br>";
             lines.append(line);
         }
-        System.out.println("Request content: "+ lines);
         return lines.toString();
     }
 

@@ -148,6 +148,10 @@ public class Request implements Serializable {
         return toRHIdentity(packet.getEncodedIdentity());
     }
 
+    public String getInsightsRequestId() {
+        return packet.getInsightsRequestId();
+    }
+
     // Used by BPMN
     public String getPostActionHeaders() {
         RHIdentity rhid = getRHIdentity();
@@ -163,16 +167,17 @@ public class Request implements Serializable {
         obj.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String encoded = "";
 
+        Logger log = Logger.getLogger(getInsightsRequestId());
         try {
             String jsonStr = obj.writeValueAsString(id);
             byte[] bytes = jsonStr.getBytes("UTF-8");
             encoded = Base64.getEncoder().encodeToString(bytes);
         }
         catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         catch (IOException e) {
-            e.printStackTrace(); 
+            log.error(e.getMessage(), e);
         }
 
         return encoded.replace("=", "");
@@ -183,13 +188,13 @@ public class Request implements Serializable {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         RHIdentity rhid = new RHIdentity();
 
+        Logger log = Logger.getLogger(getInsightsRequestId());
         try {
             byte[] decodedBytes = Base64.getDecoder().decode(encodedContext);
             String jsonStr = new String(decodedBytes);
             rhid = mapper.readValue(jsonStr, RHIdentity.class);
         } catch (IOException e) {
-              // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return rhid;

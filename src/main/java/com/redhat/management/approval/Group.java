@@ -49,6 +49,8 @@ public class Group implements Serializable {
         for (Approver approver : approvers) {
             groupStr.append("\n" + approver);
         }
+        groupStr.append("\n");
+
         return groupStr.toString();
     }
 
