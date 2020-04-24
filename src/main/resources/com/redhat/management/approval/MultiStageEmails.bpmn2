@@ -71,21 +71,24 @@
         </bpmn2:extensionElements>
         <bpmn2:incoming>_BB980627-76A5-4C4C-86F5-E97DE57232C1</bpmn2:incoming>
         <bpmn2:outgoing>_AEA570EB-7FED-430F-9321-A50FAA89D8B8</bpmn2:outgoing>
-        <bpmn2:script><![CDATA[Logger.getLogger().info("Process request now ....");
-
+        <bpmn2:script><![CDATA[
 // Suppose everything should retrieve from kcontext variable [request]
 RequestPacket requestPacket = InputParser.parseRequestPacket((java.util.LinkedHashMap<String, Object>) kcontext.getVariable("request_context"));
 Request request = InputParser.parseRequest((java.util.LinkedHashMap<String, Object>)kcontext.getVariable("request"), requestPacket);
 java.util.List<Group> groups = InputParser.parseGroups((java.util.ArrayList<java.util.LinkedHashMap<String, Object>>)kcontext.getVariable("groups"));
 
-Logger.getLogger().info("Request packet: " + requestPacket);
-Logger.getLogger().info(request.toString());
-Logger.getLogger().info("Groups: " + groups);
+String insightsRequestId = requestPacket.getInsightsRequestId();
+Logger log = Logger.getLogger(insightsRequestId);
+log.info("Process request now ....");
+log.info("Request packet: " + requestPacket);
+log.info(request.toString());
+log.info("Groups: " + groups);
     
 kcontext.setVariable("stageUrl", ApprovalApiHelper.getRequestUrl(request));
 kcontext.setVariable("request", request); 
 kcontext.setVariable("groups", groups); 
 kcontext.setVariable("errorCode", ApprovalApiHelper.SUCCEEDED);
+kcontext.setVariable("insightsRequestId", insightsRequestId);
 ]]></bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:task id="_D5CA81AE-5CE5-4AA1-980B-45FB29B49039" drools:selectable="true" drools:taskName="Rest" color:background-color="#fafad2" color:border-color="#000000" color:color="#000000" name="BACKOFFICE SendEmail">
@@ -189,9 +192,11 @@ kcontext.setVariable("errorCode", ApprovalApiHelper.SUCCEEDED);
         </bpmn2:extensionElements>
         <bpmn2:incoming>_5CD1F091-858F-4C73-A327-4F7ADBCD6F59</bpmn2:incoming>
         <bpmn2:outgoing>_BEA91AB5-8414-4B34-9EF1-A689EECBF4DA</bpmn2:outgoing>
-        <bpmn2:script><![CDATA[System.out.println("Pre-process emails now ...");
+        <bpmn2:script><![CDATA[
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
 
 try {
+  log.info("Pre-process emails now ...");
   Group currentGroup = (Group) kcontext.getVariable("currentGroup");
   java.util.List<Approver> approvers = currentGroup.getApprovers(); 
   Request request = (Request) kcontext.getVariable("request");
@@ -201,9 +206,9 @@ try {
   kcontext.setVariable("backOfficeBody", dispatcher.getBody());
   kcontext.setVariable("backOfficeUrl", dispatcher.getUrl());
 
-  System.out.println("Sending emails now ...");
+  log.info("Sending emails now ...");
 } catch (Exception e) {
-  e.printStackTrace();
+  log.error("Failed to send email", e);
   kcontext.setVariable("errorCode", ApprovalApiHelper.PARSE_EMAIL_ERROR);
   kcontext.setVariable("errorMsg", e.getMessage());
 }]]></bpmn2:script>
@@ -219,14 +224,17 @@ try {
         </bpmn2:extensionElements>
         <bpmn2:incoming>_2B795EB3-F090-4C81-83E2-B4ED46A2BA0F</bpmn2:incoming>
         <bpmn2:outgoing>_5CD1F091-858F-4C73-A327-4F7ADBCD6F59</bpmn2:outgoing>
-        <bpmn2:script><![CDATA[System.out.println("Process groups now ...");
+        <bpmn2:script><![CDATA[
+
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
+log.info("Process groups now ...");
 
 try {
   Request request = (Request) kcontext.getVariable("request");
   java.util.ArrayList<Group> groups = (java.util.ArrayList<Group>) kcontext.getVariable("groups");
   Group currentGroup = groups.remove(0);
   
-  System.out.println("Now processing group: " + currentGroup.getName());
+  log.info("Now processing group: " + currentGroup.getName());
 
   String headers = request.getPostActionHeaders() + ";x-rh-random-access-key=" +  currentGroup.getFirstRandomAccessKey();
 
@@ -234,7 +242,7 @@ try {
   kcontext.setVariable("currentGroup", currentGroup);
   kcontext.setVariable("groups", groups);
 } catch (Exception e) {
-  e.printStackTrace();
+  log.error("Failed to process groups", e);
   kcontext.setVariable("errorCode", ApprovalApiHelper.PARSE_GROUP_ERROR);
   kcontext.setVariable("errorMsg", e.getMessage());
 }]]></bpmn2:script>
@@ -287,7 +295,8 @@ try {
 
 Group currentGroup = groups.remove(0);
 
-System.out.println("Now processing group: " + currentGroup.getName());
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
+log.info("Now processing group: " + currentGroup.getName());
 
 kcontext.setVariable("currentGroup", currentGroup);
 kcontext.setVariable("groups", groups);
@@ -301,9 +310,11 @@ kcontext.setVariable("groups", groups);
         </bpmn2:extensionElements>
         <bpmn2:incoming>_61EB9F05-151C-4F5C-A483-5D8EC0B1A743</bpmn2:incoming>
         <bpmn2:outgoing>_F324D638-AD8F-4BD3-9693-782A2A97EF9A</bpmn2:outgoing>
-        <bpmn2:script><![CDATA[System.out.println("Email is sent, now post notify action to the request ....");
-
+        <bpmn2:script><![CDATA[
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
 try {
+  log.info("Email is sent, now post notify action to the request ....");
+
   Group currentGroup = (Group) kcontext.getVariable("currentGroup");
   Request request = (Request) kcontext.getVariable("request");
   String decision = (signalContent == null) ? "undecided" : (String)signalContent.get("decision");
@@ -311,11 +322,11 @@ try {
 
   kcontext.setVariable("stageContent", content);
 
-  System.out.println("Action content: " + content);
-  System.out.println("Action url: " + ApprovalApiHelper.getRequestUrl(request));
-  System.out.println("Identity: " + (String) kcontext.getVariable("identityHeaders"));
+  log.info("Action content: " + content);
+  log.info("Action url: " + ApprovalApiHelper.getRequestUrl(request));
+  log.info("Identity: " + (String) kcontext.getVariable("identityHeaders"));
 } catch (Exception e) {
-  e.printStackTrace();
+  log.error("Failed to notify", e);
   kcontext.setVariable("errorCode", ApprovalApiHelper.PARSE_HEADER_URL_ERROR);
   kcontext.setVariable("errorMsg", e.getMessage());
 }]]></bpmn2:script>
@@ -505,29 +516,33 @@ PostAction]]></drools:metaValue>
       <bpmn2:sequenceFlow id="_FE17ED82-20BE-408C-82E5-F9AED99AB17F" drools:selectable="true" color:background-color="#000000" color:border-color="#000000" color:color="#000000" sourceRef="_30C03663-441C-40A9-8AD5-E3D9E022373D" targetRef="_EE98653C-9E9C-42DA-A51F-0CF042B64BF0"/>
       <bpmn2:sequenceFlow id="_5CD1F091-858F-4C73-A327-4F7ADBCD6F59" drools:selectable="true" color:background-color="#000000" color:border-color="#000000" color:color="#000000" sourceRef="_F2E13387-70CE-407C-9691-747755EB76EE" targetRef="_56752DEC-FFF8-4623-AB0D-DD1D8F43D8C9"/>
       <bpmn2:sequenceFlow id="_BAC64943-752B-437C-B62E-61AD596FDB4A" drools:selectable="true" color:background-color="#000000" color:border-color="#000000" color:color="#000000" sourceRef="_E48A4947-1112-4FA4-B4A0-94A64D194D87" targetRef="_6F1ECB35-BAC7-421E-AA3C-77EEF08DAC21">
-        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY4mOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[System.out.println("backOfficeStatus: "+backOfficeStatus);
-
+        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY4mOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
+log.info("backOfficeStatus: " + backOfficeStatus);
 
 return  KieFunctions.equalsTo(backOfficeStatus, "200");]]></bpmn2:conditionExpression>
       </bpmn2:sequenceFlow>
       <bpmn2:sequenceFlow id="_9EABACFB-1B8B-42E2-80EE-2F3224CA08E3" drools:selectable="true" color:background-color="#000000" color:border-color="#000000" color:color="#000000" sourceRef="_E7494A19-7218-4D0E-8396-1AAFD2B3544D" targetRef="_77DDF611-DD8B-4D5C-914C-CFE4C49340E4">
         <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY42OVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[String action = (String) signalContent.get("decision");
 
-System.out.println("Signal action:" + action);
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
+log.info("Signal action:" + action);
 
 return ApprovalApiHelper.isRequestSkippable(action);]]></bpmn2:conditionExpression>
       </bpmn2:sequenceFlow>
       <bpmn2:sequenceFlow id="_DFB81044-E73A-41AD-9AEF-2D7222B71776" drools:selectable="true" color:background-color="#000000" color:border-color="#000000" color:color="#000000" sourceRef="_AC1228B2-5F09-42B2-B220-024E4B9C17E1" targetRef="_E7494A19-7218-4D0E-8396-1AAFD2B3544D">
         <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY5GOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[java.util.ArrayList<Group> groups = (java.util.ArrayList<Group>) kcontext.getVariable("groups");
 
-System.out.println("# of groups:" + groups.size());
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
+log.info("# of groups:" + groups.size());
 
 return groups.size() > 0;]]></bpmn2:conditionExpression>
       </bpmn2:sequenceFlow>
       <bpmn2:sequenceFlow id="_6F116564-5BFE-40A7-AB4D-D7CED46F8756" drools:selectable="true" color:background-color="#000000" color:border-color="#000000" color:color="#000000" sourceRef="_E7494A19-7218-4D0E-8396-1AAFD2B3544D" targetRef="_78850906-3A46-4AF0-B123-0948127514B3">
         <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY5WOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[String action = (String) signalContent.get("decision");
 
-System.out.println("Signal action: " + action);
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
+log.info("Signal action: " + action);
 kcontext.setVariable("errorCode", 0);
 
 return (!ApprovalApiHelper.isRequestSkippable(action));]]></bpmn2:conditionExpression>
@@ -547,9 +562,10 @@ return ApprovalApiHelper.isRequestSkippable(action);]]></bpmn2:conditionExpressi
       <bpmn2:sequenceFlow id="_18040C48-806F-46F1-B4E6-8A393ED02937" drools:selectable="true" color:background-color="#000000" color:border-color="#000000" color:color="#000000" sourceRef="_98A76074-FC8A-42DA-965F-7EF58049C3E1" targetRef="_CC00D6D2-8E39-43CB-BE9D-9438D2FA5A55"/>
       <bpmn2:sequenceFlow id="_2B795EB3-F090-4C81-83E2-B4ED46A2BA0F" drools:selectable="true" color:background-color="#000000" color:border-color="#000000" color:color="#000000" sourceRef="_78850906-3A46-4AF0-B123-0948127514B3" targetRef="_F2E13387-70CE-407C-9691-747755EB76EE"/>
       <bpmn2:sequenceFlow id="_450D04E1-B861-4CCF-B8EC-23FA95575730" drools:selectable="true" color:background-color="#000000" color:border-color="#000000" color:color="#000000" sourceRef="_E48A4947-1112-4FA4-B4A0-94A64D194D87" targetRef="_3DF8B374-B178-4F13-813D-2A589463E5D9">
-        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY6GOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[System.out.println("backOfficeStatus: "+backOfficeStatus);
-System.out.println("backOfficeMsg: "+backOfficeMsg);
-
+        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY6GOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
+log.error("backOfficeStatus: "+backOfficeStatus);
+log.error("backOfficeMsg: "+backOfficeMsg);
 kcontext.setVariable("stageContent", ApprovalApiHelper.getRequestErrorContent("Failed to send email."));
 
 return  KieFunctions.greaterThan(backOfficeStatus, "200");]]></bpmn2:conditionExpression>
@@ -564,9 +580,11 @@ return  KieFunctions.greaterThan(backOfficeStatus, "200");]]></bpmn2:conditionEx
             <drools:metaValue><![CDATA[Failed]]></drools:metaValue>
           </drools:metaData>
         </bpmn2:extensionElements>
-        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY6mOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[System.out.println("approvalActionStatus: " + approvalActionStatus);
-System.out.println("approvalActionMsg: " + approvalActionMsg);
-System.out.println("errorMsg: " + errorMsg);
+        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY6mOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
+log.info("approvalActionStatus: " + approvalActionStatus);
+log.info("approvalActionMsg: " + approvalActionMsg);
+log.info("errorMsg: " + errorMsg);
 
 String msg =  KieFunctions.greaterThan(errorCode, "0") ? errorMsg : approvalActionMsg;
 kcontext.setVariable("stageContent", ApprovalApiHelper.getRequestErrorContent(msg));
@@ -586,7 +604,9 @@ return groups.size() == 0;]]></bpmn2:conditionExpression>
         <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY7GOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[return  KieFunctions.equalsTo(errorCode, "0");]]></bpmn2:conditionExpression>
       </bpmn2:sequenceFlow>
       <bpmn2:sequenceFlow id="_659E35EE-F20F-4715-898A-3CF0CFC04E2C" drools:selectable="true" color:background-color="#000000" color:border-color="#000000" color:color="#000000" sourceRef="_E4BB9905-9710-431C-B0ED-DF80F6717B4B" targetRef="_40AFCD7E-DEAA-4AD6-A87E-80883E097BE5">
-        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY7WOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[System.out.println("errorMsg: " + errorMsg);
+        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_MTaY7WOVEeqCk5BclCu2jQ" language="http://www.java.com/java"><![CDATA[
+Logger log = Logger.getLogger((String)kcontext.getVariable("insightsRequestId"));
+log.error("errorMsg: " + errorMsg);
 
 kcontext.setVariable("stageContent", ApprovalApiHelper.getRequestErrorContent(errorMsg));
 

@@ -49,6 +49,10 @@ public class RequestPacket implements java.io.Serializable {
     public String getEncodedIdentity() {
         return getHeaders().get("x-rh-identity").toString();
     }
+
+    public String getInsightsRequestId() {
+        return (String) getHeaders().get("x-rh-insights-request-id");
+    }
     
     public String getOriginalUrl() {
         return this.context.get("original_url").toString();

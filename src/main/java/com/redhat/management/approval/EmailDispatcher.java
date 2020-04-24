@@ -92,14 +92,15 @@ public class EmailDispatcher implements Serializable {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String jsonStr = "";
 
+        Logger log = Logger.getLogger(request.getInsightsRequestId());
         try {
             jsonStr = mapper.writeValueAsString(list);
         } catch (JsonGenerationException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         
         this.body = jsonStr;
