@@ -159,7 +159,15 @@ public class Request implements Serializable {
         rhid.getUser().setEmail(SYSADMIN);
         rhid.getUser().setFirst_name(SYSADMIN);
         rhid.getUser().setLast_name(SYSADMIN);
-        return "x-rh-identity=" + createEncodedIdentity(rhid);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("x-rh-identity=");
+        sb.append(createEncodedIdentity(rhid));
+
+        sb.append(";x-rh-insights-request-id=");
+        sb.append(getInsightsRequestId());
+
+        return sb.toString();
     }
 
     private String createEncodedIdentity(RHIdentity id) {

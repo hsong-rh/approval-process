@@ -74,6 +74,7 @@ public class TestResources {
         context.put("original_url", ORIGINAL_URL);
         LinkedHashMap<String, Object> headers = new LinkedHashMap<String, Object>();
         headers.put("x-rh-identity", ENCODED_USER);
+        headers.put("x-rh-insights-request-id", INSIGHTS_REQUEST_ID);
         context.put("headers", headers);
 
         HashMap<String, Object> packetMap = new HashMap<String, Object>();
@@ -95,6 +96,7 @@ public class TestResources {
     public static String CREATED_AT = "2019-05-01T14:08:06.377Z";
     public static String ENCODED_USER = "eyJpZGVudGl0eSI6eyJhY2NvdW50X251bWJlciI6IjAzNjkyMzMiLCJ0eXBlIjoiVXNlciIsInVzZXIiOnsidXNlcm5hbWUiOiJqZG9lIiwiZW1haWwiOiJqZG9lQGFjbWUuY29tIiwiZmlyc3RfbmFtZSI6IkpvaG4iLCJsYXN0X25hbWUiOiJEb2UiLCJpc19hY3RpdmUiOnRydWUsImlzX29yZ19hZG1pbiI6ZmFsc2UsImlzX2ludGVybmFsIjpmYWxzZSwibG9jYWxlIjoiZW5fVVMifSwiaW50ZXJuYWwiOnsib3JnX2lkIjoiMzM0MDg1MSIsImF1dGhfdHlwZSI6ImJhc2ljLWF1dGgiLCJhdXRoX3RpbWUiOjYzMDB9fX0";
     public static String ENCODED_SYSADMIN = "eyJpZGVudGl0eSI6eyJhY2NvdW50X251bWJlciI6IjAzNjkyMzMiLCJ0eXBlIjoiVXNlciIsInVzZXIiOnsidXNlcm5hbWUiOiJqZG9lIiwiZW1haWwiOiJzeXNhZG1pbiIsImZpcnN0X25hbWUiOiJzeXNhZG1pbiIsImxhc3RfbmFtZSI6InN5c2FkbWluIiwiaXNfYWN0aXZlIjp0cnVlLCJpc19vcmdfYWRtaW4iOmZhbHNlLCJpc19pbnRlcm5hbCI6ZmFsc2UsImxvY2FsZSI6ImVuX1VTIn0sImludGVybmFsIjp7Im9yZ19pZCI6IjMzNDA4NTEiLCJhdXRoX3R5cGUiOiJiYXNpYy1hdXRoIiwiYXV0aF90aW1lIjo2MzAwfX0sInVzZXIiOnsidXNlcm5hbWUiOiJqZG9lIiwiZW1haWwiOiJzeXNhZG1pbiIsImZpcnN0X25hbWUiOiJzeXNhZG1pbiIsImxhc3RfbmFtZSI6InN5c2FkbWluIiwiaXNfYWN0aXZlIjp0cnVlLCJpc19vcmdfYWRtaW4iOmZhbHNlLCJpc19pbnRlcm5hbCI6ZmFsc2UsImxvY2FsZSI6ImVuX1VTIn19";
+    public static String INSIGHTS_REQUEST_ID = "INSIGHTS_REQUEST_ID";
     public static String RANDOM_ACCESS_KEY = "TESTING_RANDOM_ACCESS_KEY";
     public static String GROUP_REF = "TESTING_GROUP_UUID";
     public static String GROUP_NAME = "TESTING_GROUP_NAME";
