@@ -25,7 +25,7 @@ public class ApprovalApiHelper implements java.io.Serializable {
     public static final int PARSE_EMAIL_ERROR = 3;
     public static final int PARSE_HEADER_URL_ERROR = 4;
 
-    public static final String APPROVAL_API_BASE_PATH = "/api/approval/v1.1";
+    public static final String APPROVAL_API_BASE_PATH = "/api/approval/v1.2";
 
     public static String formatDate(String pattern, String timeStr) {
         DateFormat df = new SimpleDateFormat(pattern);
