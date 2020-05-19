@@ -67,7 +67,6 @@ public class EmailBody implements Serializable {
 
         HashMap<String, Object> params = (HashMap<String, Object>) requestContent.get(PARAMS_KEY);
 
-        values.put(PARAMS_KEY, getParamsTable(params));
         values.put("approval_id", getApprovalId());
 
         return values;
@@ -162,21 +161,10 @@ public class EmailBody implements Serializable {
             if (entry.getKey().equals(PARAMS_KEY))
                 continue;
   
-            String line = "<strong>" + customizeKey(entry.getKey()) + ":</strong>" + entry.getValue().toString() + "<br>";
+            String line = "<tr><th role=\"rowheader\" scope=\"row\">" + customizeKey(entry.getKey()) + ":</th><td>" + entry.getValue().toString() + "</td></tr>";
             lines.append(line);
         }
         return lines.toString();
     }
 
-    private String getParamsTable(HashMap<String, Object> params) {
-        StringBuilder paramsTable = new StringBuilder(
-                "<table><tbody><tr><td><strong>Key</strong></td><td><strong>Value<strong></td></tr>\n");
-        
-        for (HashMap.Entry<String, Object> entry: params.entrySet()) {
-            String param = "<tr><td>" + entry.getKey() + "</td><td>" + entry.getValue().toString() + "</td></tr>\n";
-            paramsTable.append(param);
-        };
-        paramsTable.append("</tbody></table>");
-        return paramsTable.toString();
-    }
 }
