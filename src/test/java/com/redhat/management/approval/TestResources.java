@@ -62,13 +62,11 @@ public class TestResources {
     }
 
     private static RequestPacket prepareRawRequestPacket() {
-        HashMap<String, String> requestParams = new HashMap<String, String>();
-        requestParams.put("CPU", CPU_NUM);
-        requestParams.put("Disk", DISK_SIZE);
-
         LinkedHashMap<String, Object> content = new LinkedHashMap<String, Object>();
         content.put("product", PRODUCT);
-        content.put("params", requestParams);
+        content.put("platform", PLATFORM);
+        content.put("portfolio", PORTFOLIO);
+        content.put("order_id", ORDER_ID);
 
         LinkedHashMap<String, Object> context = new LinkedHashMap<String, Object>();
         context.put("original_url", ORIGINAL_URL);
@@ -84,9 +82,12 @@ public class TestResources {
         return new RequestPacket(packetMap);
     }
 
-    public static String CPU_NUM = "4";
-    public static String DISK_SIZE = "100GB";
+    public static String ORDER_ID = "TESTING_ORDER_ID";
     public static String PRODUCT = "TESTING_PRODUCT";
+    public static String PLATFORM = "TESTING_PLATFORM";
+    public static String PORTFOLIO = "TESTING_PORTFOLIO";
+    public static String ORDER_TIME = "14:08:06";
+    public static String ORDER_DATE = "2019-05-01";
     public static String ORIGINAL_URL = "TESTING_URL";
     public static String REQUEST_NAME = "TESTING_REQUEST_NAME";
     public static String REQUESTER = "TESTING_REQUESTER";

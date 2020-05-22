@@ -495,15 +495,30 @@
                             <tr>
                               <th role="rowheader" scope="row">Ordered by:</th>
                               <td>${requester_name} (<a href="mailto:${orderer_email}">${orderer_email}</a>)</td>
-                            </tr>    
-                            ${contents}
+                            </tr>
                             <tr>
-                              <th role="rowheader" scope="row">Ordered date:</th>
+                              <th role="rowheader" scope="row">Order #:</th>
+                              <td>${order_id}</td>
+                            </tr>
+                            <tr>
+                              <th role="rowheader" scope="row">Order date:</th>
                               <td>${order_date}</td>
                             </tr>
                             <tr>
-                              <th role="rowheader" scope="row">Ordered time:</th>
+                              <th role="rowheader" scope="row">Order time:</th>
                               <td>${order_time}</td>
+                            </tr>
+                            <tr>
+                              <th role="rowheader" scope="row">Product:</th>
+                              <td>${product}</td>
+                            </tr>
+                            <tr>
+                              <th role="rowheader" scope="row">Portfolio:</th>
+                              <td>${portfolio}</td>
+                            </tr>
+                            <tr>
+                              <th role="rowheader" scope="row">Platform:</th>
+                              <td>${platform}</td>
                             </tr>
                           </tbody>
                         </table>
