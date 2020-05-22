@@ -31,7 +31,7 @@ public class EmailBodyTest {
       String template = body.getEmailTemplate();
 
       assertNotNull(template);
-      assertTrue(template.startsWith("<!DOCTYPE html>"));
+      assertTrue(template.startsWith("<!DOCTYPE html"));
     }
 
     @Test
