@@ -301,8 +301,13 @@
       text-align: left;
     }
 
+    .rh-data-table tbody th, .rh-data-table tbody td {
+      padding-top: 20px;
+      vertical-align: top;
+    }
+
     .rh-data-table tbody th {
-      font-weight: 500;
+      font-weight: 900;
       text-align: left;
       width: 200px;
     }
@@ -455,7 +460,7 @@
                     </tr>
                     <tr>
                       <td class="rh-masthead__subhead">
-                        <h1>Approval Request #${approval_id}</h1>
+                        <h1>Approval Request ID ${approval_id}</h1>
                       </td>
                     </tr>
                   </table>
@@ -472,7 +477,7 @@
                     <tr>
                       <td class="rh-content__block">
                         <p>
-                          ${approver_name},
+                          <strong>${approver_name},</strong>
                           <br/>
                           <br/>
                           The following Automation Services Catalog order requires your approval:
@@ -485,19 +490,16 @@
                     <tr>
                       <td class="rh-content__block">
                         <table class="rh-data-table">
-                          <thead>
-                            <tr>
-                              <th>Summary</th>
-                              <td></td>
-                            </tr>
-                          </thead>
                           <tbody>
                             <tr>
                               <th role="rowheader" scope="row">Ordered by:</th>
-                              <td>${requester_name} (<a href="mailto:${orderer_email}">${orderer_email}</a>)</td>
+                              <td>
+                                ${requester_name}<br/> (<a href="mailto:${orderer_email}">${orderer_email}</a>)
+                                <br/>
+                              </td>
                             </tr>
                             <tr>
-                              <th role="rowheader" scope="row">Order #:</th>
+                              <th role="rowheader" scope="row">Order ID:</th>
                               <td>${order_id}</td>
                             </tr>
                             <tr>
@@ -529,7 +531,7 @@
                     <!-- Content block -->
                     <tr>
                       <td class="rh-content__block">
-                        <a href="${web_url}/ansible/catalog/approval/requests/detail/${approval_id}" target="_blank">View more order details</a> (requires authentication)
+                        <strong><a href="${web_url}/ansible/catalog/approval/requests/detail/${approval_id}" target="_blank">View more order details</a></strong> (requires authentication)
                       </td>
                     </tr>
                     <!-- end content block -->
