@@ -16,11 +16,6 @@
     ],
     "displayName" : "REST",
     "icon" : "defaultservicenodeicon.png"
-  ],
-  [
-    "name" : "ErrorHandler",
-    "displayName" : "Error Handler",
-    "icon" : "defaultemailicon.gif"
   ]
   
 ]

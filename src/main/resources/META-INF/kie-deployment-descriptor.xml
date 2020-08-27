@@ -12,12 +12,6 @@
     <work-item-handlers>
         <work-item-handler>
             <resolver>mvel</resolver>
-            <identifier>new com.redhat.management.approval.ExceptionWorkItemHandler()</identifier>
-            <parameters/>
-            <name>ErrorHandler</name>
-        </work-item-handler>
-        <work-item-handler>
-            <resolver>mvel</resolver>
             <identifier>new org.jbpm.bpmn2.handler.SignallingTaskHandlerDecorator(new org.jbpm.process.workitem.rest.RESTWorkItemHandler(),  "Error-approvalError")</identifier>
             <parameters/>
             <name>Rest</name>
