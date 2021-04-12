@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [[ ! -z "${ACG_CONFIG}" ]]; then
+  export RHPAM_DB_HOST=`cdappconfig_parser.py database hostname ${ACG_CONFIG}`
+  export RHPAM_DB_PORT=`cdappconfig_parser.py database port ${ACG_CONFIG}`
+  export RHPAM_DB_USERNAME=`cdappconfig_parser.py database username ${ACG_CONFIG}`
+  export RHPAM_DB_PASSWORD=`cdappconfig_parser.py database password ${ACG_CONFIG}`
+
+  export CLOUD_WATCH_LOG_GROUP=`cdappconfig_parser.py logging cloudwatch logGroup ${ACG_CONFIG}`
+  export CW_AWS_ACCESS_KEY_ID=`cdappconfig_parser.py logging cloudwatch accessKeyId ${ACG_CONFIG}`
+  export CW_AWS_SECRET_ACCESS_KEY=`cdappconfig_parser.py logging cloudwatch secretAccessKey ${ACG_CONFIG}`
+  export CW_AWS_REGION=`cdappconfig_parser.py logging cloudwatch region ${ACG_CONFIG}`
+
+  export JBOSS_WEB_PORT=`cdappconfig_parser.py webPort ${ACG_CONFIG}`
+
+  sed -i 's/-c standalone-openshift.xml/-c standalone-approval.xml/g' /opt/eap/bin/openshift-launch.sh
+  standalone_approval.py /opt/eap/standalone/configuration/standalone-approval.xml
+fi
+
+exec ${@}
