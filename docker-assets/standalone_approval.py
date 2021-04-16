@@ -95,6 +95,7 @@ def create_datasource_node(dom):
     RHPAM_DATABASE = os.getenv('RHPAM_DATABASE')
     RHPAM_DB_USERNAME = os.getenv('RHPAM_DB_USERNAME')
     RHPAM_DB_PASSWORD = os.getenv('RHPAM_DB_PASSWORD')
+    PGSSLMODE = os.getenv('PGSSLMODE')
     PGSSLROOTCERT = os.getenv('PGSSLROOTCERT')
 
     datasource = dom.createElement("datasource")
@@ -108,7 +109,7 @@ def create_datasource_node(dom):
     if PGSSLROOTCERT == None:
         db_url = "jdbc:postgresql://{}:{}/{}".format(RHPAM_DB_HOST, RHPAM_DB_PORT, RHPAM_DATABASE)
     else:
-        db_url = "jdbc:postgresql://{}:{}/{}?ssl=true&sslmode=verify-full&sslrootcert={}".format(RHPAM_DB_HOST, RHPAM_DB_PORT, RHPAM_DATABASE, PGSSLROOTCERT)
+        db_url = "jdbc:postgresql://{}:{}/{}?ssl=true&sslmode={}&sslrootcert={}".format(RHPAM_DB_HOST, RHPAM_DB_PORT, RHPAM_DATABASE, PGSSLMODE, PGSSLROOTCERT)
 
     connection_url_text = dom.createTextNode(db_url)
     connection_url_element.appendChild(connection_url_text)

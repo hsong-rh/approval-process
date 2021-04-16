@@ -4,6 +4,23 @@ kind: Template
 metadata:
   name: approval-process
 objects:
+- apiVersion: v1
+  kind: Secret # For ephemeral/local environment
+  metadata:
+    name: approval-pam-secrets
+  stringData:
+    kie-admin-user: "${KIE_ADMIN_USER}"
+    kie-admin-pwd: "${KIE_ADMIN_PASSWORD}"
+    kie-server-user: "${KIE_SERVER_USER}"
+    kie-server-pwd: "${KIE_SERVER_PASSWORD}"
+    backoffice-token: xyz
+- apiVersion: v1
+  kind: Secret # For ephemeral/local environment
+  metadata:
+    name: keystore
+  stringData:
+    keystore_password: password
+    backoffice.jks: jks
 - apiVersion: cloud.redhat.com/v1alpha1
   kind: ClowdApp
   metadata:
@@ -20,7 +37,7 @@ objects:
         volumes:
         - name: trust-store
           secret:
-            secretName: approval-pam-secrets
+            secretName: keystore
             items:
             - key: backoffice.jks
               path: backoffice.jks
@@ -78,7 +95,7 @@ objects:
         - name: KEYSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: approval-pam-secrets
+              name: keystore
               key: keystore_password
         - name: KIE_SERVER_CONTAINER_DEPLOYMENT
           value: "containerId=com.redhat:approval:1.0.0"
@@ -86,8 +103,6 @@ objects:
           value: "java:/jboss/datasources/rhpam"
         - name: DATASOURCES
           value: "RHPAM"
-        - name: RHPAM_DATABASE
-          value: ${RHPAM_DATABASE}
         - name: RHPAM_JNDI
           value: "java:/jboss/datasources/rhpam"
         - name: RHPAM_JTA
@@ -123,7 +138,7 @@ objects:
             cpu: 200m
             memory: 500Mi
     database:
-      name: ${RHPAM_DATABASE}
+      name: pam
 
 parameters:
 - name: CLOWDER_ENABLED
@@ -140,9 +155,6 @@ parameters:
   value: quay.io/cloudservices/approval-pam
 - name: IMAGE_TAG
   value: latest
-- name: RHPAM_DATABASE
-  description: Database name
-  value: pam-production
 - name: APPROVAL_HOST
   displayName: Approval API Service Host
   description: Host to use for the approval API service URL.
@@ -196,4 +208,28 @@ parameters:
   displayName: Back-Office Client Environment
   description: Back-office client environment
   value: qa
+- name: KIE_SERVER_USER
+  displayName: Kie Server Username (Ephemeral)
+  required: true
+  description: Kie Server Username
+  from: "[a-f0-9]{8}"
+  generate: expression
+- name: KIE_SERVER_PASSWORD
+  displayName: Kie Server Password (Ephemeral)
+  required: true
+  description: Kie Server Password
+  from: "[a-f0-9]{7}!"
+  generate: expression
+- name: KIE_ADMIN_USER
+  displayName: Kie Admin Username (Ephemeral)
+  required: true
+  description: Kie Admin Username
+  from: "[a-f0-9]{8}"
+  generate: expression
+- name: KIE_ADMIN_PASSWORD
+  displayName: Kie Admin Password (Ephemeral)
+  required: true
+  description: Kie Admin Password
+  from: "[a-f0-9]{7}!"
+  generate: expression
 

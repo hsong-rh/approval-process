@@ -8,4 +8,7 @@ data = json.load(f)
 a = 'data'
 for arg in args:
         a += "['" + arg + "']"
-print(eval(a))
+try:
+        print(eval(a))
+except KeyError:
+        print("null")
