@@ -5,6 +5,7 @@ if [[ ! -z "${ACG_CONFIG}" ]]; then
   export RHPAM_DB_PORT=`cdappconfig_parser.py database port ${ACG_CONFIG}`
   export RHPAM_DB_USERNAME=`cdappconfig_parser.py database username ${ACG_CONFIG}`
   export RHPAM_DB_PASSWORD=`cdappconfig_parser.py database password ${ACG_CONFIG}`
+  export RHPAM_DATABASE=`cdappconfig_parser.py database name ${ACG_CONFIG}`
 
   export CLOUD_WATCH_LOG_GROUP=`cdappconfig_parser.py logging cloudwatch logGroup ${ACG_CONFIG}`
   export CW_AWS_ACCESS_KEY_ID=`cdappconfig_parser.py logging cloudwatch accessKeyId ${ACG_CONFIG}`
@@ -12,6 +13,20 @@ if [[ ! -z "${ACG_CONFIG}" ]]; then
   export CW_AWS_REGION=`cdappconfig_parser.py logging cloudwatch region ${ACG_CONFIG}`
 
   export JBOSS_WEB_PORT=`cdappconfig_parser.py webPort ${ACG_CONFIG}`
+
+  export PGSSLMODE=`cdappconfig_parser.py database sslMode ${ACG_CONFIG}`
+  if [[ $PGSSLMODE = "null" ]]; then
+    unset PGSSLMODE
+  fi
+
+  certString=`cdappconfig_parser.py database rdsCa ${ACG_CONFIG}`
+  if [[ $certString != "null" ]]; then
+    certPath="/opt/rdsca.crt"
+    echo "RDS Cert Path: $certPath"
+    echo "$certString" > $certPath
+
+    export PGSSLROOTCERT=$certPath
+  fi
 
   sed -i 's/-c standalone-openshift.xml/-c standalone-approval.xml/g' /opt/eap/bin/openshift-launch.sh
   standalone_approval.py /opt/eap/standalone/configuration/standalone-approval.xml
