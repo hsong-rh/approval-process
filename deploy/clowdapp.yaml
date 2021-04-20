@@ -14,12 +14,12 @@ objects:
     kie-server-user: "${KIE_SERVER_USER}"
     kie-server-pwd: "${KIE_SERVER_PASSWORD}"
     backoffice-token: xyz
+    keystore_password: password
 - apiVersion: v1
   kind: Secret # For ephemeral/local environment
   metadata:
     name: keystore
   stringData:
-    keystore_password: password
     backoffice.jks: jks
 - apiVersion: cloud.redhat.com/v1alpha1
   kind: ClowdApp
