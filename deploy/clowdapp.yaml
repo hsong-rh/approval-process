@@ -95,7 +95,7 @@ objects:
         - name: KEYSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: keystore
+              name: approval-pam-secrets
               key: keystore_password
         - name: KIE_SERVER_CONTAINER_DEPLOYMENT
           value: "containerId=com.redhat:approval:1.0.0"
